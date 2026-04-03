@@ -16,9 +16,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid Token' }, { status: 401 });
     }
 
-    const { serviceId, planType } = await req.json();
+    const { serviceId, serviceSlug, planType } = await req.json();
 
-    const service = await prisma.service.findUnique({ where: { id: serviceId } });
+    const service = serviceSlug 
+      ? await prisma.service.findUnique({ where: { slug: serviceSlug } })
+      : await prisma.service.findUnique({ where: { id: serviceId } });
+      
     if (!service) return NextResponse.json({ error: 'Service not found' }, { status: 404 });
 
     let amount = service.price;

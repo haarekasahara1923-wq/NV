@@ -1,26 +1,109 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Share2, Video, Activity, MapPin, MessageSquare, CheckCircle2 } from 'lucide-react';
+import { Share2, Video, Activity, MapPin, MessageSquare, CheckCircle2, Loader2, LayoutDashboard } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const services = [
   { slug: 'video-shoot-editing', title: 'Video Shoot & Editing', icon: <Video className="w-8 h-8"/>, desc: 'High-quality professional video production including shoot and post-editing.', price: 599, oneTime: true },
   { slug: 'social-media-manager', title: 'Social Media Manager', icon: <Share2 className="w-8 h-8"/>, desc: 'Complete management of FB, IG, YouTube & Gmail with monthly reports.', price: 1499, oneTime: false },
-  { slug: 'meta-ads', title: 'Meta Ads Services', icon: <Activity className="w-8 h-8"/>, desc: 'Facebook & Instagram ad campaigns. Targeting, creatives, A/B testing included.', price: 999, oneTime: false },
-  { slug: 'chatbot-installation', title: 'ChatBot Installation', icon: <MessageSquare className="w-8 h-8"/>, desc: 'Automate support and capture leads 24/7 on WhatsApp & your Website.', price: 499, oneTime: true },
+  { slug: 'meta-ads', title: 'Meta Ads Services', icon: <Activity className="w-8 h-8"/>, desc: 'Facebook & Instagram ad campaigns. Targeting, creatives, A/B testing included. (Excluding Meta Charges)', price: 999, oneTime: false },
+  { slug: 'chatbot-installation', title: 'ChatBot Installation', icon: <MessageSquare className="w-8 h-8"/>, desc: 'Automate support and capture leads 24/7 on WhatsApp & your Website. (Excluding Platform Charges per message)', price: 499, oneTime: true },
   { slug: 'google-my-business', title: 'Google My Business', icon: <MapPin className="w-8 h-8"/>, desc: 'Setup, optimize and manage your GMB to rank higher locally.', price: 399, oneTime: true }
 ];
 
 export default function ServicesPage() {
   const [billing, setBilling] = useState<'MONTHLY' | 'SIX_MONTH' | 'YEARLY'>('MONTHLY');
+  const [loading, setLoading] = useState<string | null>(null);
+  const [userSubs, setUserSubs] = useState<string[]>([]);
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Fetch user profile and subscriptions on mount if logged in
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('/api/me/profile'); // Assuming this exists or I'll create it
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+          setUserSubs(data.user.subscriptions.map((s: any) => s.service.slug));
+        }
+      } catch (e) {
+        console.log('Not logged in');
+      }
+    };
+    fetchUser();
+  }, []);
 
   const getPrice = (price: number, isOneTime: boolean) => {
     if (isOneTime) return `₹${price}`;
     if (billing === 'MONTHLY') return `₹${price}/mo`;
     if (billing === 'SIX_MONTH') return `₹1,200/mo (₹7,200 total)`;
     if (billing === 'YEARLY') return `₹1,200/mo (₹14,400 total)`;
+  };
+
+  const getAnalyticsLink = (slug: string) => {
+    switch (slug) {
+      case 'social-media-manager': return '/dashboard/analytics/social-media';
+      case 'meta-ads': return '/dashboard/analytics/meta-ads';
+      case 'google-my-business': return '/dashboard/analytics/gmb';
+      case 'video-shoot-editing': return '/dashboard/analytics/video';
+      case 'chatbot-installation': return '/dashboard/analytics/chatbot';
+      default: return '/dashboard';
+    }
+  };
+
+  const handleSubscribe = async (slug: string) => {
+    setLoading(slug);
+    try {
+      const res = await fetch('/api/payment/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serviceSlug: slug, planType: billing })
+      });
+
+      if (res.status === 401) {
+        toast.error('Please login to subscribe');
+        router.push(`/login?callbackUrl=/services`);
+        return;
+      }
+
+      const orderData = await res.json();
+      if (!res.ok) throw new Error(orderData.error);
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "NV Studio",
+        description: `Subscription for ${slug}`,
+        order_id: orderData.orderId,
+        handler: function (response: any) {
+          toast.success('Payment Successful! Activating your service...');
+          router.push('/dashboard/dashboard');
+        },
+        prefill: {
+          name: user?.name || "",
+          email: user?.email || "",
+          contact: user?.phone || ""
+        },
+        theme: {
+          color: "#000000"
+        }
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
+      toast.error(err.message || 'Something went wrong');
+    } finally {
+      setLoading(null);
+    }
   };
 
   return (
@@ -64,13 +147,27 @@ export default function ServicesPage() {
                   </p>
                 </div>
 
-                <Button className="w-full bg-secondary hover:bg-primary text-white transition-colors h-12 shadow-sm font-bold">
-                  Subscribe Now
-                </Button>
+                {userSubs.includes(svc.slug) ? (
+                  <Link href={getAnalyticsLink(svc.slug)} className="w-full">
+                    <Button className="w-full bg-success hover:bg-success/90 text-white transition-colors h-12 shadow-sm font-bold gap-2">
+                      <LayoutDashboard className="w-4 h-4" />
+                      View Dashboard
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button 
+                    onClick={() => handleSubscribe(svc.slug)} 
+                    disabled={loading === svc.slug}
+                    className="w-full bg-secondary hover:bg-primary text-white transition-colors h-12 shadow-sm font-bold"
+                  >
+                    {loading === svc.slug ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
+                    Subscribe Now
+                  </Button>
+                )}
                 
                 <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-success" /> Setup within 24 working hours</li>
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-success" /> Live dashboard analytics</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" /> Setup within 24 working hours</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" /> Live dashboard analytics</li>
                 </ul>
               </div>
             ))}
@@ -81,3 +178,5 @@ export default function ServicesPage() {
     </>
   );
 }
+
+
