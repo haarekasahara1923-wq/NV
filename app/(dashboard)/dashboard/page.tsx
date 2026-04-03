@@ -77,9 +77,9 @@ export default async function ClientDashboardHome() {
                       </p>
                     </div>
                   </div>
-                  <Link href={getAnalyticsLink(sub.service.slug)}>
-                    <Button variant="outline" size="sm" className="hidden sm:flex">View Analytics</Button>
-                  </Link>
+                  <Button asChild variant="outline" size="sm" className="hidden sm:flex font-bold">
+                    <Link href={getAnalyticsLink(sub.service.slug)}>View Analytics</Link>
+                  </Button>
                 </div>
               ))
             ) : (
@@ -120,16 +120,17 @@ export default async function ClientDashboardHome() {
             <p className="text-sm text-secondary-foreground/70 mb-6 max-w-[250px]">
               Browse our catalog of premium digital services and unlock new growth channels.
             </p>
-            <Link href="/services">
-              <Button className="bg-primary hover:bg-primary/90 text-white border-0 shadow-lg group">
+            <Button asChild className="bg-primary hover:bg-primary/90 text-white border-0 shadow-lg group font-bold h-12 px-8">
+              <Link href="/services">
                 Browse Catalog
-                <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
+                <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform inline" />
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
 
