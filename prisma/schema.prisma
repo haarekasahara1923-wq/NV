@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────
+// USERS
+// ─────────────────────────────────────────
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  phone        String
+  passwordHash String
+  role         Role      @default(CLIENT)
+  meCode       String?   // ME code user entered at signup (null = NV001 used)
+  referredByME String?   // FK to MarketingExecutive.id (denormalized for quick lookup)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  orders        Order[]
+  subscriptions Subscription[]
+  meProfile     MarketingExecutive? // if this user is an ME
+}
+
+enum Role {
+  CLIENT
+  MARKETING_EXECUTIVE
+  ADMIN
+}
+
+// ─────────────────────────────────────────
+// MARKETING EXECUTIVES
+// ─────────────────────────────────────────
+
+model MarketingExecutive {
+  id          String   @id @default(cuid())
+  userId      String   @unique           // FK to User
+  meCode      String   @unique           // e.g. ME001, ME002
+  displayName String
+  isActive    Boolean  @default(true)
+  commissionPct Float  @default(10)      // % commission (configurable by admin)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id])
+  clients     Client[] // clients who signed up with this ME code
+  earnings    MEEarning[]
+}
+
+// ─────────────────────────────────────────
+// CLIENT → ME LINK
+// ─────────────────────────────────────────
+
+model Client {
+  id     String @id @default(cuid())
+  userId String @unique               // FK to User
+  meId   String                       // FK to MarketingExecutive
+
+  user   User               @relation(fields: [userId], references: [id])
+  me     MarketingExecutive @relation(fields: [meId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+// ─────────────────────────────────────────
+// SERVICES
+// ─────────────────────────────────────────
+
+model Service {
+  id             String    @id @default(cuid())
+  name           String
+  slug           String    @unique
+  description    String
+  price          Int       // base monthly price in INR
+  priceType      PriceType
+  sixMonthTotal  Int?      // ₹1200 × 6 = ₹7200
+  yearlyTotal    Int?      // ₹1200 × 12 = ₹14400
+  isActive       Boolean   @default(true)
+  icon           String?
+  orders         Order[]
+  subscriptions  Subscription[]
+  analytics      ServiceAnalytics[]
+}
+
+enum PriceType {
+  ONE_TIME
+  SUBSCRIPTION
+}
+
+// ─────────────────────────────────────────
+// ORDERS
+// ─────────────────────────────────────────
+
+model Order {
+  id                String      @id @default(cuid())
+  userId            String
+  serviceId         String
+  razorpayOrderId   String      @unique
+  razorpayPaymentId String?
+  amount            Int         // in paise
+  currency          String      @default("INR")
+  status            OrderStatus @default(PENDING)
+  planType          PlanType?
+  meId              String?     // which ME referred this client (for commission)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id])
+  service      Service       @relation(fields: [serviceId], references: [id])
+  subscription Subscription?
+  meEarning    MEEarning?
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum PlanType {
+  MONTHLY
+  SIX_MONTH
+  YEARLY
+}
+
+// ─────────────────────────────────────────
+// SUBSCRIPTIONS
+// ─────────────────────────────────────────
+
+model Subscription {
+  id        String             @id @default(cuid())
+  userId    String
+  serviceId String
+  orderId   String             @unique
+  status    SubscriptionStatus @default(PENDING_ACTIVATION)
+  planType  PlanType
+  startDate DateTime?
+  endDate   DateTime?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id])
+  service Service @relation(fields: [serviceId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id])
+}
+
+enum SubscriptionStatus {
+  PENDING_ACTIVATION
+  ACTIVE
+  PAUSED
+  EXPIRED
+  CANCELLED
+}
+
+// ─────────────────────────────────────────
+// SERVICE ANALYTICS (Admin updates, Client views)
+// ─────────────────────────────────────────
+
+model ServiceAnalytics {
+  id        String   @id @default(cuid())
+  userId    String   // which client
+  serviceId String   // which service
+  data      Json     // flexible JSON: metrics differ per service
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  service Service @relation(fields: [serviceId], references: [id])
+
+  @@unique([userId, serviceId])
+}
+
+// ─────────────────────────────────────────
+// ME EARNINGS
+// ─────────────────────────────────────────
+
+model MEEarning {
+  id        String   @id @default(cuid())
+  meId      String
+  orderId   String   @unique
+  amount    Int      // commission amount in INR
+  status    EarningStatus @default(PENDING)
+  createdAt DateTime @default(now())
+
+  me    MarketingExecutive @relation(fields: [meId], references: [id])
+  order Order              @relation(fields: [orderId], references: [id])
+}
+
+enum EarningStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+// ─────────────────────────────────────────
+// CONTACT MESSAGES
+// ─────────────────────────────────────────
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  createdAt DateTime @default(now())
+}
