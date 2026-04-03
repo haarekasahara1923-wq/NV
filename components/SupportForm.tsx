@@ -21,10 +21,14 @@ export default function SupportForm({ clientInfo }: SupportFormProps) {
     e.preventDefault();
     if (!grievance) return;
 
-    const message = `*NV Studio Support Request*%0A%0A*Client ID:* ${clientInfo.userId}%0A*Client Name:* ${clientInfo.name}%0A*Grievance:* ${grievance}%0A*Contact:* ${clientInfo.phone}`;
+    const message = `*NV STUDIO - SYSTEMATIC SUPPORT*%0A%0A🪪 *Client ID:* ${clientInfo.userId}%0A👤 *Client Name:* ${clientInfo.name}%0A🛠️ *Grievance:* ${grievance}%0A%0A----------------%0A✅ Sent from NV Studio Dashboard`;
     
     const whatsappUrl = `https://wa.me/919457440300?text=${message}`;
-    window.open(whatsappUrl, '_blank');
+    
+    const win = window.open(whatsappUrl, '_blank');
+    if (!win) {
+      window.location.href = whatsappUrl; // Use same window if popup is blocked
+    }
   };
 
   return (

@@ -37,96 +37,108 @@ export default async function ClientDashboardHome() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Welcome Banner */}
-      <div className="p-8 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-background border shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center">
-        <div>
-          <h1 className="text-3xl font-bold font-heading text-foreground mb-2 whitespace-nowrap">Welcome back, {user.name.split(' ')[0]}! 👋</h1>
-          <p className="text-muted-foreground underline decoration-primary font-bold">Member since {new Date(user.createdAt).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })} | Referred by: {user.meCode || 'NV001'}</p>
-        </div>
-        <div className="mt-4 md:mt-0 flex gap-4 text-center">
-          <div className="bg-card px-4 py-3 rounded-xl border shadow-sm">
-            <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Active Services</p>
-            <p className="text-2xl font-bold text-success mt-1">{activeSubscriptions.length}</p>
+    <div className="space-y-8 animate-in fade-in slide-in-from-top-4 duration-700">
+      {/* Systematic Welcome Banner */}
+      <div className="p-10 rounded-[2.5rem] bg-gradient-to-br from-primary via-primary/80 to-secondary text-white shadow-2xl relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:scale-110 transition-transform duration-1000"></div>
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-black font-heading tracking-tight mb-2">Welcome back, {user.name.split(' ')[0]}! 🚀</h1>
+            <p className="inline-block px-4 py-1.5 bg-white/15 rounded-full text-sm font-bold backdrop-blur-md border border-white/10">
+               {new Date(user.createdAt).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })} Member | Code: {user.meCode || 'NV001'}
+            </p>
           </div>
-          <div className="bg-card px-4 py-3 rounded-xl border shadow-sm">
-            <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Pending</p>
-            <p className="text-2xl font-bold text-warning mt-1">{pendingSubscriptions.length}</p>
+          <div className="flex gap-4">
+              <Button asChild className="bg-white text-primary hover:bg-white/90 h-14 px-8 rounded-2xl font-black text-lg shadow-xl hover:-translate-y-1 transition-all">
+                <Link href="/services">Book New Service</Link>
+              </Button>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Active Services Panel */}
-        <div className="bg-card rounded-2xl border shadow-sm overflow-hidden flex flex-col">
-          <div className="p-6 border-b bg-muted/40">
-            <h2 className="text-xl font-bold font-heading">My Active Services</h2>
-          </div>
-          <div className="p-4 flex-1 space-y-4">
-            {activeSubscriptions.length > 0 ? (
-              activeSubscriptions.map((sub) => (
-                <div key={sub.id} className="flex items-center justify-between p-4 rounded-xl border bg-card hover:border-primary/50 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
-                      {getServiceIcon(sub.service.slug)}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-foreground">{sub.service.name}</h3>
-                      <p className="text-sm text-success font-medium flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-success"></span> Active since {sub.startDate ? new Date(sub.startDate).toLocaleDateString('en-IN') : 'N/A'}
-                      </p>
-                    </div>
-                  </div>
-                  <Button asChild variant="outline" size="sm" className="hidden sm:flex font-bold">
-                    <Link href={getAnalyticsLink(sub.service.slug)}>View Analytics</Link>
-                  </Button>
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-10 opacity-50">
-                <p>No active services yet.</p>
-              </div>
-            )}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="md:col-span-2 space-y-8">
+            {/* Real-time Status Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+               <div className="bg-success text-white p-6 rounded-3xl shadow-lg hover:shadow-success/20 transition-all cursor-default">
+                  <p className="text-xs font-black uppercase opacity-60">Active Services</p>
+                  <p className="text-5xl font-black mt-2 tracking-tighter">{activeSubscriptions.length}</p>
+               </div>
+               <div className="bg-warning text-white p-6 rounded-3xl shadow-lg hover:shadow-warning/20 transition-all cursor-default">
+                  <p className="text-xs font-black uppercase opacity-60">Processing Requests</p>
+                  <p className="text-5xl font-black mt-2 tracking-tighter">{pendingSubscriptions.length}</p>
+               </div>
+            </div>
 
-            {pendingSubscriptions.map((sub) => (
-              <div key={sub.id} className="flex items-center justify-between p-4 rounded-xl border bg-card hover:border-warning/50 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-warning/10 text-warning rounded-lg flex items-center justify-center">
-                    {getServiceIcon(sub.service.slug)}
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-foreground">{sub.service.name}</h3>
-                    <p className="text-sm text-warning font-medium flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-warning animate-pulse"></span> Pending (Processing)
-                    </p>
-                  </div>
-                </div>
+            {/* Systematic Active Services Panel */}
+            <div className="bg-card rounded-[2rem] border shadow-sm overflow-hidden flex flex-col min-h-[400px]">
+              <div className="p-8 border-b bg-muted/20">
+                <h2 className="text-2xl font-black font-heading border-l-4 border-primary pl-4 tracking-tight">MY ACTIVE ASSETS</h2>
               </div>
-            ))}
-          </div>
+              <div className="p-6 flex-1 space-y-4">
+                {activeSubscriptions.length > 0 ? (
+                  activeSubscriptions.map((sub) => (
+                    <div key={sub.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 rounded-2xl border-2 border-transparent bg-white shadow-sm hover:border-primary/20 hover:shadow-md transition-all group">
+                      <div className="flex items-center gap-5">
+                        <div className="w-16 h-16 bg-primary/5 text-primary rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                          {getServiceIcon(sub.service.slug)}
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-black text-foreground uppercase tracking-tight">{sub.service.name}</h3>
+                          <p className="text-sm font-bold text-success flex items-center gap-1.5 mt-1">
+                            <span className="w-2.5 h-2.5 rounded-full bg-success animate-pulse"></span> {sub.status} Since {sub.startDate ? new Date(sub.startDate).toLocaleDateString('en-IN') : 'N/A'}
+                          </p>
+                        </div>
+                      </div>
+                      <Button asChild variant="outline" className="mt-4 sm:mt-0 px-8 h-12 rounded-xl font-black uppercase text-xs tracking-widest border-2 hover:bg-primary hover:text-white hover:border-primary transition-all">
+                        <Link href={getAnalyticsLink(sub.service.slug)}>Open Analytics</Link>
+                      </Button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-20 flex flex-col items-center justify-center opacity-30 grayscale saturate-0 space-y-6">
+                    <Activity className="w-20 h-20" />
+                    <p className="text-xl font-black uppercase tracking-widest">No Active Digital Assets</p>
+                  </div>
+                )}
+              </div>
+            </div>
         </div>
 
-        {/* Available Services Panel */}
-        <div className="bg-gradient-to-b from-secondary to-secondary/90 rounded-2xl border border-secondary shadow-sm overflow-hidden text-secondary-foreground flex flex-col">
-          <div className="p-6 border-b border-white/10">
-            <h2 className="text-xl font-bold font-heading text-white">Available Services</h2>
-            <p className="text-sm text-secondary-foreground/80 mt-1">Grow your business further</p>
-          </div>
-          <div className="p-6 flex-1 flex flex-col items-center justify-center text-center">
-            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mb-4">
-              <Activity className="w-8 h-8 text-primary" />
+        {/* Sidebar Systematic Panel */}
+        <div className="space-y-6">
+            <div className="bg-white rounded-[2rem] border-2 border-primary/10 p-8 shadow-sm">
+                <div className="p-6 bg-primary/5 rounded-2xl mb-6">
+                   <ChevronRight className="w-10 h-10 text-primary mb-2" />
+                   <h3 className="text-xl font-black font-heading text-primary">GROWTH ENGINE</h3>
+                   <p className="text-sm text-foreground/60 font-bold">Recommended digital expansion for you</p>
+                </div>
+                <div className="space-y-3">
+                   {['Meta Ads Strategy', 'GMB Authority', 'AI ChatBot'].map((s, i) => (
+                       <Link key={i} href="/services">
+                         <div className="flex items-center justify-between p-4 rounded-xl border-dashed border-2 hover:border-primary/40 hover:bg-primary/5 transition-all cursor-pointer group">
+                            <p className="font-black text-sm text-foreground/80">{s}</p>
+                            <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                         </div>
+                       </Link>
+                   ))}
+                </div>
+                <Button asChild className="w-full mt-8 bg-secondary hover:bg-primary text-white h-14 rounded-2xl font-black uppercase tracking-widest group shadow-xl shadow-secondary/10 hover:shadow-primary/20">
+                    <Link href="/services">
+                       Upgrade Catalog 
+                       <Activity className="w-4 h-4 ml-3 group-hover:rotate-12 transition-transform" />
+                    </Link>
+                </Button>
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Ready to scale?</h3>
-            <p className="text-sm text-secondary-foreground/70 mb-6 max-w-[250px]">
-              Browse our catalog of premium digital services and unlock new growth channels.
-            </p>
-            <Button asChild className="bg-primary hover:bg-primary/90 text-white border-0 shadow-lg group font-bold h-12 px-8">
-              <Link href="/services">
-                Browse Catalog
-                <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform inline" />
-              </Link>
-            </Button>
-          </div>
+
+            <div className="bg-slate-900 rounded-[2rem] p-8 text-white relative overflow-hidden">
+                <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl"></div>
+                <h3 className="text-lg font-black border-b border-white/10 pb-4 mb-4 uppercase tracking-tighter">System Support</h3>
+                <p className="text-xs text-white/50 leading-relaxed mb-6 font-bold uppercase tracking-widest">Real-time assistance for your digital marketing dashboard.</p>
+                <Button asChild className="w-full bg-white text-black hover:bg-white/80 h-12 rounded-xl font-black uppercase tracking-widest text-xs">
+                    <Link href="/dashboard/support">Contact Executive</Link>
+                </Button>
+            </div>
         </div>
       </div>
     </div>
