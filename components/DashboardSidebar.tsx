@@ -1,14 +1,26 @@
+'use client';
 import Link from 'next/link';
 import { Home, Package, Activity, Share2, MapPin, Video, MessageSquare, User as UserIcon, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardSidebar() {
-  const currentPath = ''; // In a real app, use usePathname() from next/navigation
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      router.push('/login');
+      router.refresh();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   return (
-    <div className="w-64 border-r bg-card min-h-screen p-4 flex flex-col shadow-[2px_0_10px_rgba(0,0,0,0.02)]">
+    <div className="w-64 border-r bg-card min-h-screen p-4 flex flex-col shadow-[2px_0_10px_rgba(0,0,0,0.02)] transition-all">
       <div className="mb-8 px-2">
         <h2 className="text-2xl font-bold font-heading text-primary">NV Studio</h2>
-        <p className="text-sm text-muted-foreground">Client Portal</p>
+        <p className="text-sm text-muted-foreground uppercase tracking-widest font-bold opacity-50 px-1">Client Portal</p>
       </div>
 
       <nav className="flex-1 space-y-1">
@@ -22,7 +34,7 @@ export default function DashboardSidebar() {
         </Link>
 
         <div className="py-4">
-          <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Analytics</p>
+          <p className="px-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 opacity-60">Analytics</p>
           <Link href="/dashboard/analytics/social-media" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-accent text-foreground/80 hover:text-foreground transition-all">
             <Share2 className="w-4 h-4" /> Social Media
           </Link>
@@ -46,7 +58,10 @@ export default function DashboardSidebar() {
           <UserIcon className="w-5 h-5 text-muted-foreground" />
           Profile
         </Link>
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-destructive/10 text-destructive transition-all">
+        <button 
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-destructive/10 text-destructive transition-all"
+        >
           <LogOut className="w-5 h-5" />
           Log out
         </button>
@@ -54,3 +69,4 @@ export default function DashboardSidebar() {
     </div>
   );
 }
+
