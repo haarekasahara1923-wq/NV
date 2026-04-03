@@ -27,7 +27,7 @@ export default function ServicesPage() {
     // Fetch user profile and subscriptions on mount if logged in
     const fetchUser = async () => {
       try {
-        const res = await fetch('/api/me/profile'); // Assuming this exists or I'll create it
+        const res = await fetch('/api/me/profile');
         if (res.ok) {
           const data = await res.json();
           setUser(data.user);
@@ -42,9 +42,17 @@ export default function ServicesPage() {
 
   const getPrice = (price: number, isOneTime: boolean) => {
     if (isOneTime) return `₹${price}`;
+    
+    let monthlyPrice = price;
+    if (billing === 'SIX_MONTH') monthlyPrice = Math.round(price * 0.8); // 20% Discount
+    if (billing === 'YEARLY') monthlyPrice = Math.round(price * 0.7); // 30% Discount (Example for yearly)
+    
     if (billing === 'MONTHLY') return `₹${price}/mo`;
-    if (billing === 'SIX_MONTH') return `₹1,200/mo (₹7,200 total)`;
-    if (billing === 'YEARLY') return `₹1,200/mo (₹14,400 total)`;
+    
+    const multiplier = billing === 'SIX_MONTH' ? 6 : 12;
+    const total = monthlyPrice * multiplier;
+    
+    return `₹${monthlyPrice.toLocaleString('en-IN')}/mo (₹${total.toLocaleString('en-IN')} total)`;
   };
 
   const getAnalyticsLink = (slug: string) => {
