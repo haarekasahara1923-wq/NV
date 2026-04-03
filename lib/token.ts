@@ -42,7 +42,7 @@ export async function verifyTokenEdge(token: string): Promise<JWTPayload | null>
     const data = new TextEncoder().encode(`${headerB64}.${payloadB64}`)
     const signature = base64UrlDecode(signatureB64)
 
-    const valid = await crypto.subtle.verify('HMAC', key, signature, data)
+    const valid = await crypto.subtle.verify('HMAC', key, signature.buffer as ArrayBuffer, data)
     if (!valid) return null
 
     const payload = JSON.parse(atob(payloadB64.replace(/-/g, '+').replace(/_/g, '/')))

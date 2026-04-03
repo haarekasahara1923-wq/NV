@@ -68,7 +68,7 @@ export async function POST(req: Request) {
       // await resend.emails.send({ ...MENewClientAlert });
 
       // Realtime event
-      await redis.publish('admin:new-signup', JSON.stringify({ name: data.name, email: data.email, meCode: codeToUse, time: Date.now() }));
+      await redis.rpush('admin:events', JSON.stringify({ type: 'new-signup', name: data.name, email: data.email, meCode: codeToUse, time: Date.now() }));
 
       const token = signToken({ userId: user.id, role: user.role, meCode: codeToUse });
 
@@ -106,7 +106,7 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error('Signup Error:', error);
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors[0].message }, { status: 400 });
+      return NextResponse.json({ error: error.issues[0].message }, { status: 400 });
     }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
