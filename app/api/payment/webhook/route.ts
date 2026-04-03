@@ -75,7 +75,8 @@ export async function POST(req: Request) {
       // 4. Send emails (TODO: resend client order confirmation + admin alert)
 
       // 5. Send Realtime event to Redis
-      await redis.publish('admin:new-order', JSON.stringify({
+      await redis.rpush('admin:events', JSON.stringify({
+        type: 'new-order',
         clientName: order.user.name,
         service: order.service.name,
         amount: order.amount / 100,
