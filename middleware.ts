@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyToken } from '@/lib/auth'
+import { verifyTokenEdge } from '@/lib/token'
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const token = request.cookies.get('nvstudio_token')?.value
   const { pathname } = request.nextUrl
 
@@ -11,25 +11,22 @@ export function middleware(request: NextRequest) {
   if (!isProtected) return NextResponse.next()
   if (!token) return NextResponse.redirect(new URL('/login', request.url))
 
-  try {
-    const payload = verifyToken(token)
+  const payload = await verifyTokenEdge(token)
 
-    // Role-based access control
-    if (pathname.startsWith('/admin') && payload.role !== 'ADMIN')
-      return NextResponse.redirect(new URL('/dashboard', request.url))
+  if (!payload) return NextResponse.redirect(new URL('/login', request.url))
 
-    if (pathname.startsWith('/me-dashboard') && payload.role !== 'MARKETING_EXECUTIVE')
-      return NextResponse.redirect(new URL('/dashboard', request.url))
+  // Role-based access control
+  if (pathname.startsWith('/admin') && payload.role !== 'ADMIN')
+    return NextResponse.redirect(new URL('/dashboard', request.url))
 
-    if (pathname.startsWith('/dashboard') && payload.role === 'ADMIN')
-      return NextResponse.redirect(new URL('/admin', request.url))
+  if (pathname.startsWith('/me-dashboard') && payload.role !== 'MARKETING_EXECUTIVE')
+    return NextResponse.redirect(new URL('/dashboard', request.url))
 
-    if (pathname.startsWith('/dashboard') && payload.role === 'MARKETING_EXECUTIVE')
-      return NextResponse.redirect(new URL('/me-dashboard', request.url))
+  if (pathname.startsWith('/dashboard') && payload.role === 'ADMIN')
+    return NextResponse.redirect(new URL('/admin', request.url))
 
-  } catch (error) {
-    return NextResponse.redirect(new URL('/login', request.url))
-  }
+  if (pathname.startsWith('/dashboard') && payload.role === 'MARKETING_EXECUTIVE')
+    return NextResponse.redirect(new URL('/me-dashboard', request.url))
 
   return NextResponse.next()
 }
