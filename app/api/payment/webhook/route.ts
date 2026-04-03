@@ -75,16 +75,24 @@ export async function POST(req: Request) {
       // 4. Send emails (TODO: resend client order confirmation + admin alert)
 
       // 5. Send Realtime event to Redis
-      await redis.rpush('admin:events', JSON.stringify({
-        type: 'new-order',
-        clientName: order.user.name,
-        service: order.service.name,
-        amount: order.amount / 100,
-        time: Date.now()
-      }));
+      try {
+        await redis.rpush('admin:events', JSON.stringify({
+          type: 'new-order',
+          clientName: order.user.name,
+          service: order.service.name,
+          amount: order.amount / 100,
+          time: Date.now()
+        }));
+      } catch (err) {
+        console.warn('Redis event push failed:', err);
+      }
 
       // Cache subscription status
-      await redis.set(`sub:${order.userId}:${order.serviceId}`, 'PENDING_ACTIVATION', { ex: 86400 });
+      try {
+        await redis.set(`sub:${order.userId}:${order.serviceId}`, 'PENDING_ACTIVATION', { ex: 86400 });
+      } catch (err) {
+        console.warn('Redis cache set failed:', err);
+      }
     }
 
     return NextResponse.json({ success: true });

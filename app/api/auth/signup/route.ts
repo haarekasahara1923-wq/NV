@@ -67,8 +67,12 @@ export async function POST(req: Request) {
       // await resend.emails.send({ ...WelcomeClientEmail });
       // await resend.emails.send({ ...MENewClientAlert });
 
-      // Realtime event
-      await redis.rpush('admin:events', JSON.stringify({ type: 'new-signup', name: data.name, email: data.email, meCode: codeToUse, time: Date.now() }));
+      // Realtime event (with safety fallback)
+      try {
+        await redis.rpush('admin:events', JSON.stringify({ type: 'new-signup', name: data.name, email: data.email, meCode: codeToUse, time: Date.now() }));
+      } catch (redisError) {
+        console.warn('Realtime event failed to publish to Redis:', redisError);
+      }
 
       const token = signToken({ userId: user.id, role: user.role, meCode: codeToUse });
 

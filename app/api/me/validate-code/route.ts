@@ -11,10 +11,14 @@ export async function GET(req: Request) {
   }
 
   try {
-    // Check Redis cache first
-    const cached = await redis.get(`mecode:${code}`);
-    if (cached) {
-      return NextResponse.json(typeof cached === 'string' ? JSON.parse(cached) : cached);
+    // Check Redis cache first (with safety fallback)
+    try {
+      const cached = await redis.get(`mecode:${code}`);
+      if (cached) {
+        return NextResponse.json(typeof cached === 'string' ? JSON.parse(cached) : cached);
+      }
+    } catch (redisError) {
+      console.warn('Redis Cache Error (falling back to DB):', redisError);
     }
 
     const me = await prisma.marketingExecutive.findUnique({
@@ -24,7 +28,11 @@ export async function GET(req: Request) {
 
     if (me && me.isActive) {
       const result = { valid: true, meName: me.displayName };
-      await redis.set(`mecode:${code}`, JSON.stringify(result), { ex: 300 });
+      try {
+        await redis.set(`mecode:${code}`, JSON.stringify(result), { ex: 300 });
+      } catch (redisError) {
+        console.warn('Redis Cache Set Error:', redisError);
+      }
       return NextResponse.json(result);
     }
 
