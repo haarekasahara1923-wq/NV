@@ -25,6 +25,7 @@ model User {
 
   orders        Order[]
   subscriptions Subscription[]
+  clients       Client[]
   meProfile     MarketingExecutive? // if this user is an ME
 }
 
