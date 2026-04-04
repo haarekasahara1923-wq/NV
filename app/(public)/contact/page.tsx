@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import Image from 'next/image';
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false);
@@ -41,23 +42,34 @@ export default function ContactPage() {
       <div className="bg-slate-50 min-h-screen py-20 flex px-4">
         <div className="container mx-auto max-w-5xl bg-white border rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row">
           
-          <div className="bg-secondary p-12 text-white md:w-5/12 flex flex-col justify-between">
-            <div>
+          <div className="bg-slate-900 p-12 text-white md:w-5/12 flex flex-col justify-between relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
+            <div className="relative z-10">
               <h2 className="text-4xl font-bold font-heading text-primary mb-6">Get in Touch</h2>
-              <p className="text-secondary-foreground/80 mb-8">
+              <p className="text-slate-300 mb-8 leading-relaxed">
                 Ready to accelerate your growth? Send us a message and our team will get back to you within 24 working hours.
               </p>
+              
+              <div className="mt-8 rounded-2xl overflow-hidden border border-white/10 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                <Image 
+                  src="/images/social-media/growth-1.jpg" 
+                  alt="Growth with NV Studio" 
+                  width={400} 
+                  height={600} 
+                  className="w-full h-auto"
+                />
+              </div>
             </div>
             
-            <div className="space-y-6">
+            <div className="space-y-6 mt-12 relative z-10">
               <div>
                 <p className="font-bold text-primary text-sm uppercase tracking-wider">Address</p>
-                <p className="text-lg mt-1">Morar, Gwalior, MP — 474006</p>
+                <p className="text-lg mt-1 text-slate-200">Morar, Gwalior, MP — 474006</p>
               </div>
               <div>
                 <p className="font-bold text-primary text-sm uppercase tracking-wider">Contact Info</p>
-                <p className="text-lg mt-1">admin@nvstudio.in</p>
-                <p className="text-lg">+91 9999999999</p>
+                <p className="text-lg mt-1 text-slate-200">admin@nvstudio.in</p>
+                <p className="text-lg text-slate-200">+91 9999999999</p>
               </div>
             </div>
           </div>

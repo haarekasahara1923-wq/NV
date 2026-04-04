@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const services = [
   { slug: 'video-shoot-editing', title: 'Video Shoot & Editing', icon: <Video className="w-8 h-8"/>, desc: 'High-quality professional video production including shoot and post-editing.', price: 599, oneTime: true },
@@ -136,7 +137,7 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
             {services.map((svc) => (
               <div key={svc.slug} className="bg-card border rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow flex flex-col items-start relative overflow-hidden group">
                 <div className="absolute top-0 w-full h-1 bg-primary/20 group-hover:bg-primary transition-colors left-0"></div>
@@ -179,6 +180,52 @@ export default function ServicesPage() {
                 </ul>
               </div>
             ))}
+          </div>
+
+          {/* Dashboard Preview Section */}
+          <div className="bg-slate-900 rounded-[3rem] overflow-hidden shadow-2xl border border-white/5 relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent pointer-events-none"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center p-8 md:p-16 relative z-10">
+              <div className="space-y-8 text-white">
+                <div className="inline-block px-4 py-1.5 bg-primary/20 text-primary-foreground rounded-full text-sm font-bold tracking-wider uppercase">
+                  Client Portal
+                </div>
+                <h2 className="text-3xl md:text-5xl font-bold font-heading leading-tight">
+                  Track Your Growth with <span className="text-primary italic">Live Analytics</span>
+                </h2>
+                <p className="text-xl text-slate-400 leading-relaxed">
+                  Every subscription comes with a personalized dashboard. Monitor your social media reach, ad performance, and engagement metrics in real-time.
+                </p>
+                <div className="flex flex-col gap-4">
+                  {[
+                    "Daily Performance Updates",
+                    "Detailed Audience Insights",
+                    "ROI Tracking for Paid Ads",
+                    "Project Status Tracking"
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-4 text-slate-300">
+                      <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center border border-primary/50">
+                        <div className="w-2 h-2 rounded-full bg-primary"></div>
+                      </div>
+                      <span className="font-medium">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary/50 to-blue-500/50 rounded-2xl blur-2xl opacity-20 transition duration-500"></div>
+                <div className="relative rounded-2xl border border-white/10 overflow-hidden shadow-2xl transform transition-transform group-hover:scale-[1.02] duration-700">
+                  <Image 
+                    src="/images/social-media/growth-2.jpg" 
+                    alt="NV Studio Client Dashboard" 
+                    width={1200} 
+                    height={800} 
+                    className="w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
