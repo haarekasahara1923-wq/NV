@@ -27,7 +27,7 @@ export default function Home() {
                   </Button>
                 </Link>
                 <Link href="/contact">
-                  <Button size="lg" variant="outline" className="border-white/20 hover:bg-white/10 text-white h-14 px-8 text-lg rounded-full backdrop-blur-sm transition-all hover:scale-105">
+                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-slate-900 h-14 px-8 text-lg rounded-full transition-all hover:scale-105 font-bold">
                     Get Started
                   </Button>
                 </Link>

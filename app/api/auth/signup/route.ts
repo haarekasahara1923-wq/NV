@@ -97,7 +97,7 @@ export async function POST(req: Request) {
           userId: user.id,
           meCode: `PENDING-${user.id}`, // Temporary
           displayName: data.name,
-          isActive: false, // Requires admin activation
+          isActive: true, // Auto-activated for testing
         },
       });
 

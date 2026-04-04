@@ -58,36 +58,42 @@ async function main() {
     });
   }
 
-  // Create default company NV001 ME user and marketing executive profile
-  const adminEmail = process.env.ADMIN_EMAIL || "admin@nvstudio.in";
+  // Create/Update default admin user
+  const adminEmail = process.env.ADMIN_EMAIL || "admin@nv.wapiflow.site";
+  const adminPassword = process.env.ADMIN_PASSWORD || "Nami@1971";
   
-  let adminUser = await prisma.user.findUnique({ where: { email: adminEmail } });
-  
-  if (!adminUser) {
-    // Generate simple hash for default password: password123
-    const bcrypt = require('bcryptjs');
-    const hash = await bcrypt.hash("password123", 10);
-    
-    adminUser = await prisma.user.create({
-      data: {
-        name: "NV Studio Admin",
-        email: adminEmail,
-        phone: "9999999999",
-        passwordHash: hash,
-        role: "ADMIN"
-      }
-    });
+  const bcrypt = require('bcryptjs');
+  const hash = await bcrypt.hash(adminPassword, 10);
 
-    await prisma.marketingExecutive.create({
-      data: {
-        userId: adminUser.id,
-        meCode: "NV001",
-        displayName: "NV Studio (Company)",
-        isActive: true,
-        commissionPct: 0,
-      }
-    });
-  }
+  const adminUser = await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: {
+      passwordHash: hash,
+      role: "ADMIN"
+    },
+    create: {
+      name: "NV Studio Admin",
+      email: adminEmail,
+      phone: "9999999999",
+      passwordHash: hash,
+      role: "ADMIN"
+    }
+  });
+
+  await prisma.marketingExecutive.upsert({
+    where: { userId: adminUser.id },
+    update: {
+      isActive: true,
+      meCode: "NV001"
+    },
+    create: {
+      userId: adminUser.id,
+      meCode: "NV001",
+      displayName: "NV Studio (Company)",
+      isActive: true,
+      commissionPct: 0,
+    }
+  });
   
   console.log("Seed data created successfully");
 }
