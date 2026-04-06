@@ -8,9 +8,11 @@ import Navbar from '@/components/Navbar';
 import MECodeInput from '@/components/MECodeInput';
 
 export default function SignupPage() {
-  const [type, setType] = useState<'CLIENT' | 'ME'>('CLIENT');
+  const [type, setType] = useState<'CLIENT' | 'EMPLOYEE'>('CLIENT');
+  const [employeeRole, setEmployeeRole] = useState<'ME' | 'SM'>('ME');
   const [formData, setFormData] = useState({
-    name: '', email: '', phone: '', password: '', confirmPassword: '', meCode: ''
+    name: '', email: '', phone: '', password: '', confirmPassword: '', meCode: '', 
+    employeeCode: '', smCode: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -25,18 +27,22 @@ export default function SignupPage() {
     setLoading(true);
     
     try {
+      const payload = { 
+        ...formData, 
+        signupType: type === 'CLIENT' ? 'CLIENT' : (employeeRole === 'ME' ? 'ME' : 'SM')
+      };
+      
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, signupType: type })
+        body: JSON.stringify(payload)
       });
       const data = await res.json();
       
       if (!res.ok) throw new Error(data.error);
 
-      if (type === 'ME') {
-        setSuccess(data.message);
-        setFormData({ name: '', email: '', phone: '', password: '', confirmPassword: '', meCode: '' });
+      if (type === 'EMPLOYEE') {
+        window.location.href = data.redirect || '/login';
       } else {
         window.location.href = data.redirect;
       }
@@ -53,7 +59,7 @@ export default function SignupPage() {
       <div className="flex-1 flex items-center justify-center p-4 py-12">
         <div className="bg-white max-w-md w-full rounded-2xl shadow-xl border overflow-hidden">
           <div className="bg-secondary p-6 text-center text-white">
-            <h1 className="text-3xl font-bold font-heading text-primary bg-clip-text">Create Account</h1>
+            <h1 className="text-3xl font-bold font-heading text-primary">Create Account</h1>
             <p className="text-secondary-foreground/70 mt-2 text-sm">Join NV Studio today</p>
           </div>
           
@@ -66,16 +72,16 @@ export default function SignupPage() {
                 Client
               </button>
               <button 
-                onClick={() => setType('ME')}
-                className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${type === 'ME' ? 'bg-white shadow text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                onClick={() => setType('EMPLOYEE')}
+                className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${type === 'EMPLOYEE' ? 'bg-white shadow text-primary' : 'text-muted-foreground hover:text-foreground'}`}
               >
-                Marketing Executive
+                Employee
               </button>
             </div>
 
             {success ? (
               <div className="bg-success/10 text-success p-4 rounded-lg text-center mb-6 border border-success/20">
-                <p className="font-bold mb-2">🎉 Registration Submitted!</p>
+                <p className="font-bold mb-2">🎉 Registration Successful!</p>
                 <p className="text-sm">{success}</p>
                 <Link href="/login">
                   <Button className="mt-4 bg-success hover:bg-success/90">Go to Login</Button>
@@ -87,17 +93,17 @@ export default function SignupPage() {
                 
                 <div className="space-y-2">
                   <Label>Full Name</Label>
-                  <Input required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                  <Input required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="John Doe" />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Email</Label>
-                    <Input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                    <Input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} placeholder="john@example.com" />
                   </div>
                   <div className="space-y-2">
                     <Label>Phone</Label>
-                    <Input required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+                    <Input required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="10-digit number" />
                   </div>
                 </div>
 
@@ -116,9 +122,30 @@ export default function SignupPage() {
                   <MECodeInput value={formData.meCode} onChange={v => setFormData({...formData, meCode: v})} />
                 )}
 
-                {type === 'ME' && (
-                  <div className="bg-warning/10 border border-warning/20 p-3 rounded-lg text-xs text-warning-foreground font-medium">
-                    Note: Your ME account will be reviewed. An active ME code will be assigned by the NV Studio admin within 24 hours.
+                {type === 'EMPLOYEE' && (
+                  <div className="space-y-4 border-t pt-4 mt-4">
+                    <div className="flex gap-4">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" checked={employeeRole === 'ME'} onChange={() => setEmployeeRole('ME')} name="employeeRole" className="w-4 h-4 text-primary" />
+                        <span className="text-sm font-medium">Marketing Executive</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" checked={employeeRole === 'SM'} onChange={() => setEmployeeRole('SM')} name="employeeRole" className="w-4 h-4 text-primary" />
+                        <span className="text-sm font-medium">Sales Manager</span>
+                      </label>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Employee Code (Check Offer Letter)</Label>
+                      <Input required value={formData.employeeCode} onChange={e => setFormData({...formData, employeeCode: e.target.value.toUpperCase()})} placeholder={employeeRole === 'ME' ? 'NVME001' : 'NVSM01'} />
+                    </div>
+
+                    {employeeRole === 'ME' && (
+                      <div className="space-y-2">
+                        <Label>Assigned Sales Manager (SM) Code</Label>
+                        <Input required value={formData.smCode} onChange={e => setFormData({...formData, smCode: e.target.value.toUpperCase()})} placeholder="NVSM01" />
+                      </div>
+                    )}
                   </div>
                 )}
 

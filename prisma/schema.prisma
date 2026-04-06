@@ -11,6 +11,13 @@ datasource db {
 // USERS
 // ─────────────────────────────────────────
 
+enum Role {
+  CLIENT
+  MARKETING_EXECUTIVE
+  SALES_MANAGER
+  ADMIN
+}
+
 model User {
   id           String    @id @default(cuid())
   name         String
@@ -18,7 +25,8 @@ model User {
   phone        String
   passwordHash String
   role         Role      @default(CLIENT)
-  meCode       String?   // ME code user entered at signup (null = NV001 used)
+  meCode       String?   // ME code user entered at signup (null = NV001 used) or their own code if they are ME/SM
+  employeeCode String?   @unique // The physical code from offer letter
   referredByME String?   // FK to MarketingExecutive.id (denormalized for quick lookup)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
@@ -27,13 +35,25 @@ model User {
   subscriptions    Subscription[]
   clients          Client[]
   meProfile        MarketingExecutive? // if this user is an ME
+  smProfile        SalesManager?       // if this user is an SM
   socialMediaPosts SocialMediaPost[]
 }
 
-enum Role {
-  CLIENT
-  MARKETING_EXECUTIVE
-  ADMIN
+// ─────────────────────────────────────────
+// SALES MANAGERS
+// ─────────────────────────────────────────
+
+model SalesManager {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  smCode      String   @unique // e.g. NVSM01
+  displayName String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id])
+  mes         MarketingExecutive[]
 }
 
 // ─────────────────────────────────────────
@@ -43,7 +63,8 @@ enum Role {
 model MarketingExecutive {
   id          String   @id @default(cuid())
   userId      String   @unique           // FK to User
-  meCode      String   @unique           // e.g. ME001, ME002
+  meCode      String   @unique           // e.g. NVME001
+  smId        String?                    // Link to SalesManager
   displayName String
   isActive    Boolean  @default(true)
   commissionPct Float  @default(10)      // % commission (configurable by admin)
@@ -51,8 +72,23 @@ model MarketingExecutive {
   updatedAt   DateTime @updatedAt
 
   user        User     @relation(fields: [userId], references: [id])
+  sm          SalesManager? @relation(fields: [smId], references: [id])
   clients     Client[] // clients who signed up with this ME code
   earnings    MEEarning[]
+  dailyMetrics DailyPerformance[]
+}
+
+model DailyPerformance {
+  id               String   @id @default(cuid())
+  meId             String
+  date             DateTime @default(now())
+  callsDone        Int      @default(0)
+  leadsCreated     Int      @default(0)
+  successfulOrders Int      @default(0)
+
+  me               MarketingExecutive @relation(fields: [meId], references: [id])
+
+  @@unique([meId, date])
 }
 
 // ─────────────────────────────────────────

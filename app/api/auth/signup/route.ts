@@ -11,8 +11,10 @@ const signupSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Invalid phone number'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  signupType: z.enum(['CLIENT', 'ME']),
+  signupType: z.enum(['CLIENT', 'ME', 'SM']),
   meCode: z.string().optional(),
+  employeeCode: z.string().optional(),
+  smCode: z.string().optional(),
 });
 
 export async function POST(req: Request) {
@@ -31,10 +33,19 @@ export async function POST(req: Request) {
       );
     }
 
+    if (data.employeeCode) {
+      const existingCode = await prisma.user.findUnique({
+        where: { employeeCode: data.employeeCode }
+      });
+      if (existingCode) {
+        return NextResponse.json({ error: 'Employee Code already in use' }, { status: 400 });
+      }
+    }
+
     const hashedPassword = await hashPassword(data.password);
 
     if (data.signupType === 'CLIENT') {
-      const codeToUse = data.meCode?.trim() ? data.meCode.trim() : (process.env.DEFAULT_ME_CODE || 'NV001');
+      const codeToUse = data.meCode?.trim() ? data.meCode.trim() : (process.env.DEFAULT_ME_CODE || 'NVME001');
 
       const meUser = await prisma.marketingExecutive.findUnique({
         where: { meCode: codeToUse },
@@ -63,25 +74,53 @@ export async function POST(req: Request) {
         },
       });
 
-      // Send emails
-      // await resend.emails.send({ ...WelcomeClientEmail });
-      // await resend.emails.send({ ...MENewClientAlert });
-
-      // Realtime event (with safety fallback)
-      try {
-        await redis.rpush('admin:events', JSON.stringify({ type: 'new-signup', name: data.name, email: data.email, meCode: codeToUse, time: Date.now() }));
-      } catch (redisError) {
-        console.warn('Realtime event failed to publish to Redis:', redisError);
-      }
-
       const token = signToken({ userId: user.id, role: user.role, meCode: codeToUse });
-
       const response = NextResponse.json({ message: 'Signup successful', redirect: '/dashboard' });
       response.cookies.set('nvstudio_token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 7 * 24 * 60 * 60, path: '/' });
       return response;
 
-    } else {
+    } else if (data.signupType === 'SM') {
+      // Sales Manager Signup
+      if (!data.employeeCode) return NextResponse.json({ error: 'Employee code required' }, { status: 400 });
+
+      const user = await prisma.user.create({
+        data: {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          passwordHash: hashedPassword,
+          role: 'SALES_MANAGER',
+          employeeCode: data.employeeCode,
+          meCode: data.employeeCode, // SM code is also their ME code for tracking
+        },
+      });
+
+      await prisma.salesManager.create({
+        data: {
+          userId: user.id,
+          smCode: data.employeeCode,
+          displayName: data.name,
+        },
+      });
+
+      const token = signToken({ userId: user.id, role: user.role });
+      const response = NextResponse.json({ message: 'SM Signup successful', redirect: '/sm/dashboard' });
+      response.cookies.set('nvstudio_token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 7 * 24 * 60 * 60, path: '/' });
+      return response;
+
+    } else if (data.signupType === 'ME') {
       // ME Signup
+      if (!data.employeeCode) return NextResponse.json({ error: 'Employee code required' }, { status: 400 });
+      if (!data.smCode) return NextResponse.json({ error: 'SM code required' }, { status: 400 });
+
+      const sm = await prisma.salesManager.findUnique({
+        where: { smCode: data.smCode }
+      });
+
+      if (!sm) {
+        return NextResponse.json({ error: 'Invalid SM Code' }, { status: 400 });
+      }
+
       const user = await prisma.user.create({
         data: {
           name: data.name,
@@ -89,22 +128,25 @@ export async function POST(req: Request) {
           phone: data.phone,
           passwordHash: hashedPassword,
           role: 'MARKETING_EXECUTIVE',
+          employeeCode: data.employeeCode,
+          meCode: data.employeeCode,
+          smCode: data.smCode
         },
       });
 
       await prisma.marketingExecutive.create({
         data: {
           userId: user.id,
-          meCode: `PENDING-${user.id}`, // Temporary
+          meCode: data.employeeCode,
           displayName: data.name,
-          isActive: true, // Auto-activated for testing
+          smId: sm.id
         },
       });
 
-      // Send Email
-      // await resend.emails.send({ ...WelcomeMEEmail });
-
-      return NextResponse.json({ message: 'Account created! Admin will assign your ME code within 24 hours.', redirect: '/login' });
+      const token = signToken({ userId: user.id, role: user.role, meCode: data.employeeCode });
+      const response = NextResponse.json({ message: 'ME Signup successful', redirect: '/me/dashboard' });
+      response.cookies.set('nvstudio_token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 7 * 24 * 60 * 60, path: '/' });
+      return response;
     }
 
   } catch (error: any) {

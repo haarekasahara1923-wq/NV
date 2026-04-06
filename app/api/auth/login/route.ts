@@ -4,7 +4,7 @@ import { comparePassword, signToken } from '@/lib/auth';
 import { z } from 'zod';
 
 const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  identifier: z.string().min(1, 'Email or Employee Code is required'),
   password: z.string().min(1, 'Password is required'),
 });
 
@@ -13,91 +13,52 @@ export async function POST(req: Request) {
     const body = await req.json();
     const data = loginSchema.parse(body);
 
-    let user = await prisma.user.findUnique({
-      where: { email: data.email },
+    let user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: data.identifier },
+          { employeeCode: data.identifier }
+        ]
+      }
     });
 
-    // Check for admin bootstrap if user not found or password doesn't match
+    // Check for admin bootstrap
     const isBootstrapAdmin = 
       process.env.ADMIN_EMAIL && 
-      data.email === process.env.ADMIN_EMAIL && 
+      data.identifier === process.env.ADMIN_EMAIL && 
       data.password === process.env.ADMIN_PASSWORD;
 
-    if (isBootstrapAdmin) {
-      if (!user) {
-        // Create the admin user if it doesn't exist
-        const { hashPassword } = await import('@/lib/auth');
-        const hash = await hashPassword(data.password);
-        user = await prisma.user.create({
-          data: {
-            name: "NV Studio Admin",
-            email: data.email,
-            phone: "9999999999",
-            passwordHash: hash,
-            role: "ADMIN"
-          }
-        });
-        
-        // Also create ME profile for admin (NV001)
-        await prisma.marketingExecutive.upsert({
-          where: { userId: user.id },
-          update: { isActive: true, meCode: "NV001" },
-          create: {
-            userId: user.id,
-            meCode: "NV001",
-            displayName: "NV Studio (Company)",
-            isActive: true,
-            commissionPct: 0,
-          }
-        });
-      } else {
-        // If user exists but login was failed, and it matches env vars, we could update it too
-        // But for now, we'll just allow it to fall through to the password check if and only if
-        // the password matches the hashed one in DB. 
-        // If password didn't match but matches ADMIN_PASSWORD, we can "force" log in and update.
-      }
+    if (isBootstrapAdmin && !user) {
+      const { hashPassword } = await import('@/lib/auth');
+      const hash = await hashPassword(data.password);
+      user = await prisma.user.create({
+        data: {
+          name: "NV Studio Admin",
+          email: data.identifier,
+          phone: "9999999999",
+          passwordHash: hash,
+          role: "ADMIN"
+        }
+      });
     }
 
     if (!user || !(await comparePassword(data.password, user.passwordHash))) {
-      // Final attempt: if we are here and password didn't match the hash, but we have a match
-      // with ADMIN_PASSWORD for the ADMIN_EMAIL, we should still fail UNLESS 
-      // it's the very first bootstrap. But we already handled the "no user" case.
-      
-      // One edge case: User exists but password in DB is old, but matches ADMIN_PASSWORD in env.
-      // Let's allow force bootstrap for admin email if password matches env secret.
-      if (isBootstrapAdmin && user) {
-          // Allow login and update the hash to stay in sync
-          const { hashPassword } = await import('@/lib/auth');
-          const newHash = await hashPassword(data.password);
-          await prisma.user.update({
-             where: { id: user.id },
-             data: { passwordHash: newHash, role: 'ADMIN' }
-          });
-      } else {
-        return NextResponse.json(
-          { error: 'Invalid email or password' },
-          { status: 401 }
-        );
-      }
+      return NextResponse.json(
+        { error: 'Invalid identifier or password' },
+        { status: 401 }
+      );
     }
 
-    if (user.role === 'MARKETING_EXECUTIVE') {
-      const meProfile = await prisma.marketingExecutive.findUnique({
-        where: { userId: user.id },
-      });
-      if (!meProfile || !meProfile.isActive) {
-        return NextResponse.json(
-          { error: 'Your account is pending activation by admin.' },
-          { status: 403 }
-        );
-      }
-    }
-
-    const token = signToken({ userId: user.id, role: user.role, meCode: user.meCode || undefined });
+    const token = signToken({ 
+      userId: user.id, 
+      role: user.role, 
+      meCode: user.meCode || undefined 
+    });
 
     let redirectUrl = '/dashboard';
     if (user.role === 'ADMIN') redirectUrl = '/admin';
     if (user.role === 'MARKETING_EXECUTIVE') redirectUrl = '/me-dashboard';
+    if (user.role === 'SALES_MANAGER') redirectUrl = '/sm-dashboard';
 
     const response = NextResponse.json({ message: 'Login successful', redirect: redirectUrl });
     response.cookies.set('nvstudio_token', token, {

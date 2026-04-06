@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 
 export default function LoginPage() {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ identifier: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -49,8 +49,8 @@ export default function LoginPage() {
               {error && <div className="p-3 bg-destructive/10 text-destructive text-sm rounded-lg font-medium text-center border border-destructive/20">{error}</div>}
               
               <div className="space-y-2">
-                <Label>Email</Label>
-                <Input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} placeholder="you@example.com" />
+                <Label>Email or Employee Code</Label>
+                <Input required value={formData.identifier} onChange={e => setFormData({...formData, identifier: e.target.value})} placeholder="you@example.com or NVME001" />
               </div>
 
               <div className="space-y-2">
