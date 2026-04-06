@@ -24,7 +24,7 @@ export default function DashboardSidebar() {
   ];
 
   const analyticsItems = [
-    { name: 'Social Media', href: '/dashboard/analytics/social-media', icon: Share2 },
+    { name: 'Social Media Management', href: '/dashboard/analytics/social-media', icon: Share2 },
     { name: 'Meta Ads', href: '/dashboard/analytics/meta-ads', icon: Activity },
     { name: 'GMB Profile', href: '/dashboard/analytics/gmb', icon: MapPin },
     { name: 'Video Project', href: '/dashboard/analytics/video', icon: Video },

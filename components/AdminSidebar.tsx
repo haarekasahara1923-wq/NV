@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { LayoutDashboard, Users, PackageOpen, Briefcase, TrendingUp, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, PackageOpen, Briefcase, TrendingUp, Settings, LogOut, Share2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function AdminSidebar() {
@@ -46,6 +46,10 @@ export default function AdminSidebar() {
         <Link href="/admin/analytics" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-white/5 text-white transition-all">
           <TrendingUp className="w-5 h-5 text-primary" />
           Update Analytics
+        </Link>
+        <Link href="/admin/social-media" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-white/5 text-white transition-all">
+          <Share2 className="w-5 h-5 text-primary" />
+          Social Media Posts
         </Link>
         <div className="pt-4 mt-4 border-t border-white/5">
             <Link href="/admin/settings" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 text-white/70 hover:text-white transition-all">

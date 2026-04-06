@@ -23,10 +23,11 @@ model User {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  orders        Order[]
-  subscriptions Subscription[]
-  clients       Client[]
-  meProfile     MarketingExecutive? // if this user is an ME
+  orders           Order[]
+  subscriptions    Subscription[]
+  clients          Client[]
+  meProfile        MarketingExecutive? // if this user is an ME
+  socialMediaPosts SocialMediaPost[]
 }
 
 enum Role {
@@ -210,4 +211,40 @@ model ContactMessage {
   phone     String?
   message   String
   createdAt DateTime @default(now())
+}
+
+// ─────────────────────────────────────────
+// SOCIAL MEDIA CONTENT CALENDAR
+// ─────────────────────────────────────────
+
+model SocialMediaPost {
+  id           String          @id @default(cuid())
+  userId       String          // which client's calendar
+  platform     SocialPlatform
+  postDate     DateTime        // the date content was posted
+  title        String?         // optional caption / title
+  contentUrl   String          // direct link to the post/video/reel
+  thumbnailUrl String?         // optional preview thumbnail
+  contentType  ContentType     @default(POST)
+  isAutoSynced Boolean         @default(false) // true = came from API, false = manual
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum SocialPlatform {
+  FACEBOOK
+  INSTAGRAM
+  YOUTUBE
+  GMAIL
+}
+
+enum ContentType {
+  POST
+  REEL
+  VIDEO
+  SHORT
+  STORY
+  EMAIL
 }
