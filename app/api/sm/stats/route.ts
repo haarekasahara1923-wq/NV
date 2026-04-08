@@ -46,7 +46,7 @@ export async function GET() {
     
     const clients = me.clients.map(client => {
       let clientIncentiveToSM = 0;
-      let activeServicesNames: string[] = [];
+      const activeServicesNames: string[] = [];
 
       client.user.subscriptions.forEach(sub => {
         // Calculate if it's the 1st month
