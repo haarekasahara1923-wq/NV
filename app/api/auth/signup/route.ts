@@ -129,8 +129,7 @@ export async function POST(req: Request) {
           passwordHash: hashedPassword,
           role: 'MARKETING_EXECUTIVE',
           employeeCode: data.employeeCode,
-          meCode: data.employeeCode,
-          smCode: data.smCode
+          meCode: data.employeeCode
         },
       });
 

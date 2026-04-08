@@ -45,7 +45,7 @@ export async function GET(req: Request) {
 
   // Generate CSV
   let csv = 'Date,Executive Name,Executive Code,Calls Done,Leads Created,Orders Successful\n';
-  metrics.forEach(m => {
+  metrics.forEach((m: any) => {
     csv += `${m.date.toISOString().split('T')[0]},${m.me.displayName},${m.me.meCode},${m.callsDone},${m.leadsCreated},${m.successfulOrders}\n`;
   });
 
