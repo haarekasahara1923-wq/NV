@@ -17,7 +17,7 @@ export default function PrivacyPage() {
             <p>Your data is synced via secure third-party platforms to ensure service delivery: Razorpay (payments), Resend (emails), and Neon (database backups). We will never sell your information to exterior entities.</p>
 
             <h2 className="text-2xl font-bold text-foreground mt-8">User Rights</h2>
-            <p>You have the right to request full data deletion at any time by sending a written notice to admin@nvstudio.in. All data mapped to your userId will be scrubbed from our active Postgres servers.</p>
+            <p>You have the right to request full data deletion at any time by sending a written notice to support@nvstudio.wapiflow.site. All data mapped to your userId will be scrubbed from our active Postgres servers.</p>
           </div>
         </div>
       </div>

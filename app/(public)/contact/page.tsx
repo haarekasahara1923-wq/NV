@@ -68,8 +68,8 @@ export default function ContactPage() {
               </div>
               <div>
                 <p className="font-bold text-primary text-sm uppercase tracking-wider">Contact Info</p>
-                <p className="text-lg mt-1 text-slate-200">admin@nvstudio.in</p>
-                <p className="text-lg text-slate-200">+91 9999999999</p>
+                <p className="text-lg mt-1 text-slate-200">support@nvstudio.wapiflow.site</p>
+                <p className="text-lg text-slate-200">+91 9457440300</p>
               </div>
             </div>
           </div>

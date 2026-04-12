@@ -35,8 +35,8 @@ export default function Footer() {
         <div>
           <h4 className="font-bold mb-4">Contact Us</h4>
           <ul className="space-y-2 text-sm text-secondary-foreground/80">
-            <li>Email: admin@nvstudio.in</li>
-            <li>Phone: +91 9999999999</li>
+            <li>Email: support@nvstudio.wapiflow.site</li>
+            <li>Phone: +91 9457440300</li>
             <li>Location: Gwalior, Madhya Pradesh</li>
           </ul>
         </div>
