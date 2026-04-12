@@ -22,6 +22,8 @@ export default function ServicesPage() {
   const [loading, setLoading] = useState<string | null>(null);
   const [userSubs, setUserSubs] = useState<string[]>([]);
   const [user, setUser] = useState<any>(null);
+  const [showQRMode, setShowQRMode] = useState<boolean>(false);
+  const [currentOrder, setCurrentOrder] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -85,29 +87,9 @@ export default function ServicesPage() {
       const orderData = await res.json();
       if (!res.ok) throw new Error(orderData.error);
 
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: orderData.amount,
-        currency: orderData.currency,
-        name: "NV Studio",
-        description: `Subscription for ${slug}`,
-        order_id: orderData.orderId,
-        handler: function (response: any) {
-          toast.success('Payment Successful! Activating your service...');
-          router.push('/dashboard/dashboard');
-        },
-        prefill: {
-          name: user?.name || "",
-          email: user?.email || "",
-          contact: user?.phone || ""
-        },
-        theme: {
-          color: "#000000"
-        }
-      };
-
-      const rzp = new (window as any).Razorpay(options);
-      rzp.open();
+      // RAZORPAY FLOW HOLD - USING MANUAL QR FLOW
+      setCurrentOrder({ ...orderData, slug });
+      setShowQRMode(true);
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong');
     } finally {
@@ -115,9 +97,53 @@ export default function ServicesPage() {
     }
   };
 
+  const handleManualPaymentDone = () => {
+    toast.success('We have notified the Admin! Your service will be activated once payment is verified.');
+    setShowQRMode(false);
+    router.push('/dashboard');
+  };
+
   return (
     <>
       <Navbar />
+      
+      {showQRMode && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-card w-full max-w-md rounded-3xl p-8 shadow-2xl relative border border-border animate-in fade-in zoom-in duration-300">
+            <button onClick={() => setShowQRMode(false)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground">
+              ✕
+            </button>
+            <div className="text-center space-y-4">
+              <h2 className="text-2xl font-black font-heading text-primary uppercase tracking-wider">Pay to NV Studio</h2>
+              <p className="text-sm text-muted-foreground">
+                Please scan the QR code below using any UPI App (GPay, PhonePe, Paytm).
+                <br/>
+                <span className="font-bold text-foreground mt-2 block">You can pay the standard price or your agreed custom price!</span>
+              </p>
+              
+              <div className="bg-white p-4 rounded-2xl mx-auto shadow-inner border border-slate-200 inline-block w-64 h-64 relative">
+                {/* Replace src with the user's actual image path */}
+                <Image src="/upi-qr.jpg" alt="NV Studio UPI QR" fill className="object-contain rounded-xl" />
+              </div>
+              
+              <div className="bg-muted/50 p-3 rounded-lg border">
+                <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">NV Studio UPI ID</p>
+                <p className="text-base font-bold text-foreground select-all mt-1">haarekasahara1923-3@oksbi</p>
+              </div>
+
+              <div className="pt-4">
+                <Button onClick={handleManualPaymentDone} className="w-full h-12 text-lg font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-500/20">
+                  I have paid the amount
+                </Button>
+                <p className="text-xs text-muted-foreground mt-4">
+                  Once you pay, click the button above. The admin will verify the payment and activate your order immediately.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="bg-background min-h-screen py-20">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-16">
