@@ -31,11 +31,21 @@ export async function POST(req: Request) {
     // Convert to paise
     const amountInPaise = amount * 100;
 
-    const rzpOrder = await razorpay.orders.create({
-      amount: amountInPaise,
-      currency: "INR",
-      receipt: `rcpt_${Date.now()}`
-    });
+    let rzpOrderId = `manual_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    try {
+      if (process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+        const rzpOrder = await razorpay.orders.create({
+          amount: amountInPaise,
+          currency: "INR",
+          receipt: `rcpt_${Date.now()}`
+        });
+        if (rzpOrder && rzpOrder.id) {
+          rzpOrderId = rzpOrder.id;
+        }
+      }
+    } catch (e) {
+      console.warn("Razorpay order creation skipped/failed. Proceeding with manual checkout.");
+    }
 
     const user = await prisma.user.findUnique({
       where: { id: payload.userId },
@@ -46,7 +56,7 @@ export async function POST(req: Request) {
       data: {
         userId: payload.userId,
         serviceId: service.id,
-        razorpayOrderId: rzpOrder.id,
+        razorpayOrderId: rzpOrderId,
         amount: amountInPaise,
         currency: "INR",
         planType: planType || null,
@@ -55,7 +65,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({
-      orderId: rzpOrder.id,
+      orderId: rzpOrderId,
       amount: amountInPaise,
       currency: "INR"
     });
