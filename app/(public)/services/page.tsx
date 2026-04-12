@@ -119,7 +119,7 @@ export default function ServicesPage() {
       if (!res.ok) throw new Error('Failed to update UTR');
       toast.success('UTR Submitted! We have notified the Admin. Your service will be activated once verified.');
       setShowQRMode(false);
-      router.push('/dashboard/dashboard');
+      router.push('/dashboard');
     } catch (err) {
       toast.error('Failed to submit UTR. Please try again.');
     }
