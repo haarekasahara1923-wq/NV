@@ -3,157 +3,153 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import { Zap, Target, TrendingUp, CheckCircle2 } from 'lucide-react';
 
 export default function Home() {
   return (
     <>
       <Navbar />
-      <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative w-full py-20 md:py-32 bg-slate-900 text-white overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-50 z-0"></div>
-          <div className="container px-4 md:px-6 relative z-10 mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="text-center lg:text-left space-y-6">
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 font-heading leading-tight">
-                Grow Your Business with <span className="text-primary italic">NV Studio</span>
-              </h1>
-              <p className="mx-auto lg:mx-0 max-w-[600px] text-lg md:text-xl text-slate-300 font-medium leading-relaxed">
-                Premium Digital Marketing, Video Production, and Automation Services in Gwalior. Accelerate your growth today.
-              </p>
-              <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
-                <Link href="/services">
-                  <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold h-14 px-8 text-lg rounded-full shadow-xl shadow-primary/25 transition-all hover:scale-105">
-                    View Services
-                  </Button>
-                </Link>
-                <Link href="/contact">
-                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-slate-900 h-14 px-8 text-lg rounded-full transition-all hover:scale-105 font-bold">
-                    Get Started
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-blue-600 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-              <div className="relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
-                <Image 
-                  src="/images/social-media/growth-1.jpg" 
-                  alt="Social Media Growth Dashboard" 
-                  width={800} 
-                  height={1200} 
-                  className="w-full object-cover transform transition-transform group-hover:scale-105 duration-500"
-                />
-              </div>
-            </div>
+      <main className="flex-1 overflow-x-hidden bg-slate-50">
+        
+        {/* HERO SECTION */}
+        <section className="relative w-full pt-28 pb-16 md:pt-40 md:pb-32 bg-slate-900 border-b border-slate-800">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] mix-blend-screen transform translate-x-1/3 -translate-y-1/3"></div>
+             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[120px] mix-blend-screen transform -translate-x-1/3 translate-y-1/3"></div>
+             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay"></div>
           </div>
-        </section>
+          
+          <div className="container px-4 md:px-8 relative z-10 mx-auto">
+            <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+              
+              {/* TEXT CONTENT - ALWAYS FIRST ON MOBILE */}
+              <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 order-1">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-bold animate-in fade-in slide-in-from-bottom-4 duration-700">
+                  <Zap className="w-4 h-4" /> The New Era of Digital Growth
+                </div>
+                
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.1] animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
+                  Skyrocket Your <br className="hidden md:block" />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-indigo-400">
+                    Business Growth
+                  </span>
+                </h1>
+                
+                <p className="text-lg md:text-xl text-slate-300 font-medium max-w-[600px] leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+                  Premium digital marketing pipelines designed to generate high-quality leads, automate sales, and build an unbreakable presence.
+                </p>
+                
+                <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-4 pt-4 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-300">
+                  <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white font-black h-16 px-10 text-lg rounded-2xl shadow-[0_0_40px_rgba(37,99,235,0.3)] hover:shadow-[0_0_60px_rgba(37,99,235,0.5)] transition-all hover:-translate-y-1 w-full sm:w-auto">
+                    <Link href="/services">View Services</Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="border-slate-700 bg-slate-800/50 backdrop-blur-sm text-white hover:bg-white hover:text-slate-900 h-16 px-10 text-lg rounded-2xl transition-all hover:-translate-y-1 font-bold w-full sm:w-auto">
+                    <Link href="/contact">Book Strategy Call</Link>
+                  </Button>
+                </div>
 
-        {/* Growth Strategy Section */}
-        <section className="py-24 bg-white overflow-hidden">
-          <div className="container px-4 mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div className="order-2 lg:order-1 relative">
-                <div className="absolute -top-12 -left-12 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10"></div>
-                <div className="overflow-hidden rounded-[2.5rem] shadow-2xl border-8 border-slate-50">
+                <div className="flex items-center gap-6 pt-6 text-sm font-bold text-slate-400 animate-in fade-in duration-1000 delay-500">
+                   <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-green-400"/> Results Guaranteed</span>
+                   <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-green-400"/> 24hr Setup</span>
+                </div>
+              </div>
+
+              {/* IMAGE SECTION - BEAUTIFULLY CONTAINED */}
+              <div className="w-full lg:w-1/2 relative order-2 mt-8 lg:mt-0 perspective-1000">
+                <div className="absolute inset-0 bg-gradient-to-tr from-primary to-indigo-600 rounded-[3rem] blur-2xl opacity-30 animate-pulse transition"></div>
+                <div className="relative rounded-[2.5rem] border border-white/10 shadow-2xl overflow-hidden bg-slate-800 transform lg:rotate-y-12 lg:-rotate-x-6 hover:rotate-y-0 hover:rotate-x-0 transition-transform duration-700">
                   <Image 
-                    src="/images/social-media/social-strategy.jpg" 
-                    alt="Level Up Social Media Strategy" 
-                    width={600} 
-                    height={800} 
-                    className="w-full object-cover"
+                    src="/images/social-media/growth-1.jpg" 
+                    alt="NV Studio Dashboard" 
+                    width={800} 
+                    height={1000} 
+                    className="w-full h-auto object-cover opacity-90 scale-105 hover:scale-100 transition-transform duration-1000"
+                    priority
                   />
-                </div>
-              </div>
-              <div className="order-1 lg:order-2 space-y-8">
-                <div className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-bold tracking-wider uppercase">
-                  Strategy First
-                </div>
-                <h2 className="text-4xl md:text-5xl font-bold font-heading text-slate-900 leading-tight">
-                  Level Up Your <span className="text-primary">Social Media</span> Presence
-                </h2>
-                <p className="text-xl text-slate-600 leading-relaxed">
-                  We don't just post content; we build strategies that drive real results. From data analysis to performance tracking, your brand is in expert hands.
-                </p>
-                <ul className="space-y-4">
-                  {[
-                    "Data-Driven Growth Strategies",
-                    "Targeted Ad Campaigns",
-                    "Competitor Analysis",
-                    "ROI Focused Execution"
-                  ].map((item, idx) => (
-                    <li key={idx} className="flex items-center gap-3 text-lg text-slate-700 font-medium">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-white text-sm font-bold">✓</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Engagement Section */}
-        <section className="py-24 bg-slate-50 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-full lg:w-1/2 h-full bg-primary/5 -skew-x-12 transform translate-x-1/2"></div>
-          <div className="container px-4 mx-auto relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div className="space-y-8">
-                <div className="inline-block px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-bold tracking-wider uppercase">
-                  Audience Growth
-                </div>
-                <h2 className="text-4xl md:text-5xl font-bold font-heading text-slate-900 leading-tight">
-                  Maximize <span className="text-blue-600">Engagement</span> with Organic Content
-                </h2>
-                <p className="text-xl text-slate-600 leading-relaxed">
-                  Connect deeply with your audience through creative storytelling and community management. We help you turn followers into fans.
-                </p>
-                <div className="grid grid-cols-2 gap-6 pt-4">
-                  <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
-                    <div className="text-3xl font-bold text-primary mb-1">12K+</div>
-                    <div className="text-slate-500 font-medium">Active Followers</div>
-                  </div>
-                  <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
-                    <div className="text-3xl font-bold text-blue-600 mb-1">230X</div>
-                    <div className="text-slate-500 font-medium">Higher Reach</div>
+                  {/* Floating Glass Element */}
+                  <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 flex items-center gap-4">
+                     <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center border border-green-500/30">
+                        <TrendingUp className="w-6 h-6 text-green-400" />
+                     </div>
+                     <div>
+                        <p className="text-white font-black text-lg">+340%</p>
+                        <p className="text-slate-300 text-xs font-bold uppercase tracking-widest">Average ROI</p>
+                     </div>
                   </div>
                 </div>
               </div>
-              <div className="relative group">
-                <div className="absolute -inset-2 bg-gradient-to-tr from-blue-600 to-primary rounded-[2.5rem] opacity-20 blur-lg group-hover:opacity-30 transition"></div>
-                <div className="overflow-hidden rounded-[2rem] shadow-2xl border-4 border-white transform transition-transform group-hover:-translate-y-2 duration-500">
-                  <Image 
-                    src="/images/social-media/organic-engagement.jpg" 
-                    alt="Maximizing Organic Engagement" 
-                    width={600} 
-                    height={800} 
-                    className="w-full object-cover"
-                  />
-                </div>
-              </div>
+
             </div>
           </div>
         </section>
 
-        {/* Why Choose Us */}
-        <section className="py-24 bg-white">
-          <div className="container px-4 mx-auto text-center">
-            <h2 className="text-3xl md:text-5xl font-bold mb-16 font-heading text-slate-900">Why NV Studio is Different</h2>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        {/* VALUE PROPOSITION SECTION */}
+        <section className="py-20 md:py-32 relative z-20 -mt-10">
+          <div className="container px-4 md:px-8 mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { title: "Local Expertise", desc: "Based in Gwalior, understanding the local market nuances.", icon: "📍" },
-                { title: "Premium Quality", desc: "Top-tier video production and ad creatives.", icon: "✨" },
-                { title: "Data-Driven", desc: "Transparent analytics and real ROI tracking.", icon: "📈" },
-                { title: "Affordable", desc: "High-end marketing accessible for tier 2 & 3 cities.", icon: "💰" }
+                { title: "Targeted Advertising", desc: "Hyper-focused Meta & Google Ads that bring paying customers directly to your inbox.", icon: <Target className="w-8 h-8 text-blue-500" /> },
+                { title: "Automated Funnels", desc: "We implement AI Chatbots that capture and convert your leads 24/7 without human intervention.", icon: <Zap className="w-8 h-8 text-amber-500" /> },
+                { title: "Organic Dominance", desc: "Complete Social Media Management & GMB scaling to overtake your local competitors.", icon: <TrendingUp className="w-8 h-8 text-emerald-500" /> }
               ].map((item, i) => (
-                <div key={i} className="p-10 rounded-3xl bg-slate-50 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                  <div className="text-5xl mb-6">{item.icon}</div>
-                  <h3 className="text-2xl font-bold mb-4 text-slate-900">{item.title}</h3>
-                  <p className="text-slate-600 text-lg leading-relaxed">{item.desc}</p>
+                <div key={i} className="bg-white p-8 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 hover:-translate-y-2 transition-all duration-300 group">
+                  <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-inner">
+                    {item.icon}
+                  </div>
+                  <h3 className="text-2xl font-black text-slate-900 mb-3">{item.title}</h3>
+                  <p className="text-slate-500 font-medium leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
+
+        {/* STRATEGY SPLIT SECTION */}
+        <section className="py-16 md:py-32 overflow-hidden bg-white">
+          <div className="container px-4 md:px-8 mx-auto">
+            <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+              
+              <div className="w-full lg:w-1/2 relative order-2 lg:order-1">
+                <div className="absolute -inset-8 bg-blue-50 rounded-full blur-3xl -z-10"></div>
+                <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border-[12px] border-slate-50">
+                  <Image 
+                    src="/images/social-media/social-strategy.jpg" 
+                    alt="Social Media Strategy" 
+                    width={700} 
+                    height={900} 
+                    className="w-full h-auto object-cover hover:scale-105 transition-transform duration-1000"
+                  />
+                </div>
+              </div>
+
+              <div className="w-full lg:w-1/2 space-y-8 order-1 lg:order-2">
+                <div className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-black tracking-widest uppercase">
+                  Data-Driven Execution
+                </div>
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 leading-tight">
+                  Stop Guessing. <br/> <span className="text-primary">Start Scaling.</span>
+                </h2>
+                <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed max-w-xl">
+                  We formulate aggressive expansion strategies using raw analytics. Your brand's growth is engineered, not accidental.
+                </p>
+                <div className="space-y-5 pt-4">
+                  {[
+                    "Uncover competitor blind spots instantly",
+                    "A/B test creatives for minimal ad-spend waste",
+                    "Engage directly with high-intent audience"
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100 w-max pr-8">
+                      <div className="w-8 h-8 rounded-full bg-green-500 shadow-lg shadow-green-500/30 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">✓</div>
+                      <span className="font-bold text-slate-700">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
       </main>
       <Footer />
     </>
