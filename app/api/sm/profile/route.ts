@@ -9,22 +9,18 @@ export async function GET(req: Request) {
     if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const decoded = await verifyToken(token);
-    if (!decoded || decoded.role !== 'MARKETING_EXECUTIVE') {
+    if (!decoded || decoded.role !== 'SALES_MANAGER') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
       include: {
-        meProfile: {
-          include: {
-            sm: true
-          }
-        }
+        smProfile: true
       }
     });
 
-    if (!user || !user.meProfile) {
+    if (!user || !user.smProfile) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
@@ -32,12 +28,10 @@ export async function GET(req: Request) {
       name: user.name,
       email: user.email,
       phone: user.phone,
-      meCode: user.meProfile.meCode,
-      smCode: user.meProfile.sm?.smCode || null,
-      commissionPct: user.meProfile.commissionPct,
+      smCode: user.smProfile.smCode,
     });
   } catch (error) {
-    console.error('Error fetching ME profile:', error);
+    console.error('Error fetching SM profile:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

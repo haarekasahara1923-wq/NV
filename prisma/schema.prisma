@@ -76,6 +76,7 @@ model MarketingExecutive {
   clients     Client[] // clients who signed up with this ME code
   earnings    MEEarning[]
   dailyMetrics DailyPerformance[]
+  callRecords  MECallRecord[]
 }
 
 model DailyPerformance {
@@ -89,6 +90,27 @@ model DailyPerformance {
   me               MarketingExecutive @relation(fields: [meId], references: [id])
 
   @@unique([meId, date])
+}
+
+// ─────────────────────────────────────────
+// ME CALL RECORDS (Detailed daily logs)
+// ─────────────────────────────────────────
+
+model MECallRecord {
+  id               String   @id @default(cuid())
+  meId             String
+  date             DateTime @default(now())
+  clientName       String
+  address          String?
+  mobileNo         String
+  servicesInterest String?
+  remarks          String?
+  isOnboarded      Boolean  @default(false)
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  me               MarketingExecutive @relation(fields: [meId], references: [id])
 }
 
 // ─────────────────────────────────────────

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export default function MEDashboardHome() {
-  const [stats, setStats] = useState({ clients: 0, newThisMonth: 0, earnings: 0, meCode: '', name: '' });
+  const [stats, setStats] = useState({ clients: 0, newThisMonth: 0, earnings: 0, meCode: '', smCode: '', name: '' });
   const [metrics, setMetrics] = useState({ calls: 0, leads: 0, orders: 0 });
   const [loading, setLoading] = useState(true);
   const [logging, setLogging] = useState(false);
@@ -54,8 +54,11 @@ export default function MEDashboardHome() {
       <div className="p-8 rounded-2xl bg-secondary text-secondary-foreground shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center border border-secondary">
         <div>
           <h1 className="text-3xl font-bold font-heading text-white mb-2">Hello, {stats.name}!</h1>
-          <p className="text-secondary-foreground/80 flex items-center gap-2">
+          <p className="text-secondary-foreground/80 flex items-center gap-2 mt-1">
             Your ME Code: <span className="bg-primary/20 text-primary px-3 py-1 rounded-md font-bold text-lg tracking-widest border border-primary/30">{stats.meCode} 🏷️</span>
+            {stats.smCode && (
+               <span className="ml-2 bg-muted/20 text-muted-foreground px-3 py-1 rounded-md font-bold text-sm border border-muted/30">SM: {stats.smCode}</span>
+            )}
           </p>
           <p className="mt-2 text-sm text-secondary-foreground/60">Help clients grow their business to earn more incentives.</p>
         </div>

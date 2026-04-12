@@ -94,7 +94,7 @@ export default function SMTeamPage() {
                    </span>
                 </TableCell>
                 <TableCell className="text-right px-8">
-                   <Link href="/sm-dashboard">
+                   <Link href={`/sm-dashboard/team/${me.id}`}>
                       <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary hover:text-white group-hover:pr-6 transition-all">
                         Details <ArrowRight size={14} className="ml-2"/>
                       </Button>

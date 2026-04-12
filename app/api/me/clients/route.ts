@@ -35,16 +35,18 @@ export async function GET() {
        const isFirstMonth = sub.createdAt > new Date(new Date().setMonth(new Date().getMonth() - 1));
        const incentive = calculateMEIncentive(sub.service.slug, isFirstMonth);
        meIncentiveTotal += incentive;
-       return {
          serviceName: sub.service.name,
          incentive: incentive,
-         startDate: sub.startDate || sub.createdAt
+         startDate: sub.startDate || sub.createdAt,
+         duration: sub.planType
        };
     });
 
     return {
       id: client.id,
       name: client.user.name,
+      phone: client.user.phone,
+      email: client.user.email,
       employeeCode: client.user.employeeCode || `CLIENT-${client.id.slice(0,5).toUpperCase()}`,
       services: servicesData,
       totalIncentive: meIncentiveTotal,

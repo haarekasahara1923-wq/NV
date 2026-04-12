@@ -1,9 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Users, Briefcase, IndianRupee } from 'lucide-react';
+import { Download, Users, Phone, MapPin, IndianRupee } from 'lucide-react';
 
 export default function MEClientsPage() {
   const [clients, setClients] = useState<any[]>([]);
@@ -34,7 +34,7 @@ export default function MEClientsPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-8 bg-gradient-to-r from-primary to-indigo-900 rounded-3xl text-white shadow-xl">
         <div>
-          <h1 className="text-4xl font-black font-heading mb-2">My Client Network</h1>
+          <h1 className="text-4xl font-black font-heading mb-2">My Onboarded Clients</h1>
           <p className="text-indigo-100 flex items-center gap-2 text-lg">
             <Users className="w-5 h-5"/> {clients.length} Active Clients
           </p>
@@ -44,73 +44,59 @@ export default function MEClientsPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
-        {clients.map((client) => (
-          <Card key={client.id} className="rounded-3xl border-none shadow-xl overflow-hidden hover:shadow-2xl transition-all group">
-            <div className="flex flex-col md:flex-row">
-              {/* Client Info Block */}
-              <div className="p-8 bg-slate-50 md:w-1/3 flex flex-col justify-center border-r">
-                 <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
-                   <Users size={32} />
-                 </div>
-                 <h3 className="text-2xl font-bold font-heading">{client.name}</h3>
-                 <p className="text-muted-foreground font-mono font-bold text-xs mt-1 uppercase tracking-widest">
-                   ID: {client.employeeCode}
-                 </p>
-                 <p className="text-xs text-muted-foreground mt-4">Joined {new Date(client.joinedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
-              </div>
-
-              {/* Service Details Block */}
-              <div className="p-8 flex-1 bg-white">
-                 <div className="flex items-center gap-2 mb-6">
-                    <Briefcase className="w-5 h-5 text-primary" />
-                    <h4 className="font-bold text-lg">Service Subscriptions</h4>
-                 </div>
-                 
-                 <div className="space-y-4 mb-8">
-                   {client.services.map((svc: any, idx: number) => (
-                     <div key={idx} className="flex justify-between items-center p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100 group-hover:border-indigo-300 transition-colors">
-                        <div>
-                           <p className="font-bold text-slate-800">{svc.serviceName}</p>
-                           <p className="text-xs text-muted-foreground">Monthly recurrence active</p>
-                        </div>
-                        <div className="text-right">
-                           <p className="text-sm font-bold text-indigo-600 flex items-center justify-end"><IndianRupee size={12}/> {svc.incentive}</p>
-                           <p className="text-[10px] uppercase font-black tracking-widest opacity-40">Monthly Share</p>
-                        </div>
-                     </div>
-                   ))}
-                   {client.services.length === 0 && (
-                     <div className="p-6 text-center text-muted-foreground italic bg-slate-50 rounded-2xl border border-dashed">
-                        No active service legacy found.
-                     </div>
-                   )}
-                 </div>
-
-                 <div className="pt-6 border-t flex justify-between items-center">
-                    <div>
-                       <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Client Contribution</p>
-                       <p className="text-xs text-muted-foreground">Total incentives from this client</p>
-                    </div>
-                    <div className="text-right">
-                       <p className="text-3xl font-black text-emerald-600">₹{client.totalIncentive}</p>
-                    </div>
-                 </div>
-              </div>
-            </div>
-          </Card>
-        ))}
-
-        {clients.length === 0 && (
-          <div className="h-96 flex flex-col items-center justify-center text-muted-foreground bg-white rounded-3xl border-2 border-dashed p-12">
-             <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mb-6">
-                <Users size={40} className="opacity-10"/>
-             </div>
-             <h3 className="text-xl font-bold">No Clients Linked Yet</h3>
-             <p className="max-w-xs mt-2 text-center">Ask clients to use your code during signup to see them here.</p>
+      <Card className="rounded-[2rem] border-none shadow-2xl overflow-hidden bg-white">
+        {clients.length === 0 ? (
+          <div className="p-12 text-center text-muted-foreground bg-slate-50">
+            <Users size={48} className="mx-auto mb-4 opacity-20" />
+            <h3 className="text-xl font-bold">No Onboarded Clients found</h3>
+            <p className="mt-2">Clients who have successfully paid for services will appear here.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+             <table className="w-full text-left">
+               <thead className="bg-slate-50 border-b">
+                 <tr>
+                   <th className="px-6 py-4 text-xs font-black uppercase text-slate-400 tracking-wider">Date Joined</th>
+                   <th className="px-6 py-4 text-xs font-black uppercase text-slate-400 tracking-wider">Client Details</th>
+                   <th className="px-6 py-4 text-xs font-black uppercase text-slate-400 tracking-wider">Services Provided & Duration</th>
+                   <th className="px-6 py-4 text-xs font-black uppercase text-slate-400 tracking-wider text-right">My Incentive</th>
+                 </tr>
+               </thead>
+               <tbody className="divide-y">
+                 {clients.map((client) => (
+                   <tr key={client.id} className="hover:bg-slate-50/50 transition-colors">
+                     <td className="px-6 py-4 align-top whitespace-nowrap text-muted-foreground font-medium">
+                       {new Date(client.joinedAt).toLocaleDateString()}
+                     </td>
+                     <td className="px-6 py-4 align-top">
+                       <p className="font-bold text-base">{client.name}</p>
+                       <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><Phone size={12}/> {client.phone}</p>
+                     </td>
+                     <td className="px-6 py-4 align-top">
+                       {client.services.length === 0 ? (
+                          <span className="text-muted-foreground text-sm italic">No active services</span>
+                       ) : (
+                          <div className="space-y-2">
+                            {client.services.map((svc: any, i: number) => (
+                               <div key={i} className="bg-primary/5 rounded-md px-3 py-2 border border-primary/10">
+                                  <p className="font-bold text-sm text-primary">{svc.serviceName}</p>
+                                  <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mt-1">Duration: {svc.duration || 'N/A'}</p>
+                               </div>
+                            ))}
+                          </div>
+                       )}
+                     </td>
+                     <td className="px-6 py-4 align-top text-right">
+                       <p className="text-xl font-black text-emerald-600 flex items-center justify-end"><IndianRupee size={16}/> {client.totalIncentive}</p>
+                       <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">Total</p>
+                     </td>
+                   </tr>
+                 ))}
+               </tbody>
+             </table>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 }

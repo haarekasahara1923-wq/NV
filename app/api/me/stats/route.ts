@@ -12,6 +12,7 @@ export async function GET() {
     where: { userId: session.userId },
     include: {
       user: true,
+      sm: true,
       clients: {
         include: {
           user: {
@@ -36,6 +37,7 @@ export async function GET() {
   return NextResponse.json({
     name: me.displayName || me.user.name,
     meCode: me.meCode,
+    smCode: me.sm?.smCode,
     clients: me.clients.length,
     newThisMonth: me.clients.filter(c => c.createdAt > new Date(new Date().setDate(1))).length,
     earnings: earnings
