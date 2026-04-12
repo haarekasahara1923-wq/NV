@@ -104,7 +104,7 @@ export async function POST(req: Request) {
       });
 
       const token = signToken({ userId: user.id, role: user.role });
-      const response = NextResponse.json({ message: 'SM Signup successful', redirect: '/sm/dashboard' });
+      const response = NextResponse.json({ message: 'SM Signup successful', redirect: '/sm-dashboard' });
       response.cookies.set('nvstudio_token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 7 * 24 * 60 * 60, path: '/' });
       return response;
 
@@ -143,7 +143,7 @@ export async function POST(req: Request) {
       });
 
       const token = signToken({ userId: user.id, role: user.role, meCode: data.employeeCode });
-      const response = NextResponse.json({ message: 'ME Signup successful', redirect: '/me/dashboard' });
+      const response = NextResponse.json({ message: 'ME Signup successful', redirect: '/me-dashboard' });
       response.cookies.set('nvstudio_token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 7 * 24 * 60 * 60, path: '/' });
       return response;
     }
