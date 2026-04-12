@@ -23,6 +23,8 @@ export default function ServicesPage() {
   const [userSubs, setUserSubs] = useState<string[]>([]);
   const [user, setUser] = useState<any>(null);
   const [showQRMode, setShowQRMode] = useState<boolean>(false);
+  const [showUtrInput, setShowUtrInput] = useState<boolean>(false);
+  const [utrNumber, setUtrNumber] = useState<string>('');
   const [currentOrder, setCurrentOrder] = useState<any>(null);
   const router = useRouter();
 
@@ -90,6 +92,8 @@ export default function ServicesPage() {
       // RAZORPAY FLOW HOLD - USING MANUAL QR FLOW
       setCurrentOrder({ ...orderData, slug });
       setShowQRMode(true);
+      setShowUtrInput(false);
+      setUtrNumber('');
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong');
     } finally {
@@ -98,9 +102,27 @@ export default function ServicesPage() {
   };
 
   const handleManualPaymentDone = () => {
-    toast.success('We have notified the Admin! Your service will be activated once payment is verified.');
-    setShowQRMode(false);
-    router.push('/dashboard');
+    setShowUtrInput(true);
+  };
+
+  const submitUtrAndClose = async () => {
+    if (!utrNumber.trim()) {
+      toast.error('Please enter the UPI Transaction/UTR Number');
+      return;
+    }
+    try {
+      const res = await fetch('/api/payment/update-utr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: currentOrder.orderId, utrNo: utrNumber })
+      });
+      if (!res.ok) throw new Error('Failed to update UTR');
+      toast.success('UTR Submitted! We have notified the Admin. Your service will be activated once verified.');
+      setShowQRMode(false);
+      router.push('/dashboard/dashboard');
+    } catch (err) {
+      toast.error('Failed to submit UTR. Please try again.');
+    }
   };
 
   return (
@@ -113,33 +135,60 @@ export default function ServicesPage() {
             <button onClick={() => setShowQRMode(false)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground">
               ✕
             </button>
-            <div className="text-center space-y-4">
-              <h2 className="text-2xl font-black font-heading text-primary uppercase tracking-wider">Pay to NV Studio</h2>
-              <p className="text-sm text-muted-foreground">
-                Please scan the QR code below using any UPI App (GPay, PhonePe, Paytm).
-                <br/>
-                <span className="font-bold text-foreground mt-2 block">You can pay the standard price or your agreed custom price!</span>
-              </p>
-              
-              <div className="bg-white p-4 rounded-2xl mx-auto shadow-inner border border-slate-200 inline-block w-64 h-64 relative">
-                {/* Replace src with the user's actual image path */}
-                <Image src="/upi-qr.jpg" alt="NV Studio UPI QR" fill className="object-contain rounded-xl" />
-              </div>
-              
-              <div className="bg-muted/50 p-3 rounded-lg border">
-                <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">NV Studio UPI ID</p>
-                <p className="text-base font-bold text-foreground select-all mt-1">haarekasahara1923-3@oksbi</p>
-              </div>
 
-              <div className="pt-4">
-                <Button onClick={handleManualPaymentDone} className="w-full h-12 text-lg font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-500/20">
-                  I have paid the amount
-                </Button>
-                <p className="text-xs text-muted-foreground mt-4">
-                  Once you pay, click the button above. The admin will verify the payment and activate your order immediately.
+            {!showUtrInput ? (
+              <div className="text-center space-y-4">
+                <h2 className="text-2xl font-black font-heading text-primary uppercase tracking-wider">Pay to NV Studio</h2>
+                <p className="text-sm text-muted-foreground">
+                  Please scan the QR code below using any UPI App (GPay, PhonePe, Paytm).
+                  <br/>
+                  <span className="font-bold text-foreground mt-2 block">You can pay the standard price or your agreed custom price!</span>
                 </p>
+                
+                <div className="bg-white p-4 rounded-2xl mx-auto shadow-inner border border-slate-200 inline-block w-64 h-64 relative">
+                  <Image src="/upi-qr.jpg" alt="NV Studio UPI QR" fill className="object-contain rounded-xl" />
+                </div>
+                
+                <div className="bg-muted/50 p-3 rounded-lg border">
+                  <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">NV Studio UPI ID</p>
+                  <p className="text-base font-bold text-foreground select-all mt-1">haarekasahara1923-3@oksbi</p>
+                </div>
+
+                <div className="pt-4">
+                  <Button onClick={handleManualPaymentDone} className="w-full h-12 text-lg font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-500/20">
+                    I have paid the amount
+                  </Button>
+                </div>
+                
+                <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl mt-4 text-left">
+                  <p className="text-xs text-blue-600 font-medium">
+                    <span className="font-bold">Note:</span> Upon successful payment, you will need to share the necessary access to manage your Social Media Platforms. Services will be activated within 24 Hrs of access sharing.
+                  </p>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="text-center space-y-6">
+                 <h2 className="text-2xl font-black font-heading text-primary uppercase tracking-wider">Verify Payment</h2>
+                 <p className="text-sm text-muted-foreground">
+                   Please enter the 12-digit UPI Transaction ID or UTR number from your payment app so we can verify your payment.
+                 </p>
+                 
+                 <div className="text-left space-y-2">
+                   <label className="text-xs font-bold uppercase text-muted-foreground ml-1">UTR / Transaction ID</label>
+                   <input 
+                     type="text" 
+                     value={utrNumber}
+                     onChange={(e) => setUtrNumber(e.target.value)}
+                     placeholder="e.g. 308412345678" 
+                     className="w-full h-12 px-4 rounded-xl border bg-muted/50 font-bold focus:ring-2 focus:ring-primary outline-none"
+                   />
+                 </div>
+
+                 <Button onClick={submitUtrAndClose} className="w-full h-12 text-lg font-bold bg-primary text-white shadow-xl shadow-primary/20">
+                    Submit UTR Details
+                 </Button>
+              </div>
+            )}
           </div>
         </div>
       )}

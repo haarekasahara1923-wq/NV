@@ -88,6 +88,11 @@ export default function OrdersManagementPage() {
                             <tr key={order.id} className="hover:bg-muted/30 transition-colors">
                                 <td className="px-6 py-4">
                                   <span className="font-bold text-primary">{order.razorpayOrderId?.slice(0, 14) || `ORD-${order.id.slice(0,5).toUpperCase()}`}</span>
+                                  {order.razorpayPaymentId && order.razorpayPaymentId !== 'manual_admin_cash_upi' && order.status === 'PENDING' && (
+                                     <p className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded mt-1 border border-amber-200 w-max">
+                                       UTR: {order.razorpayPaymentId}
+                                     </p>
+                                  )}
                                   <p className="text-xs text-muted-foreground mt-1">{new Date(order.createdAt).toLocaleDateString()}</p>
                                 </td>
                                 <td className="px-6 py-4">
