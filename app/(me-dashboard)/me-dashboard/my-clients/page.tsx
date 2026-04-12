@@ -78,9 +78,16 @@ export default function MEClientsPage() {
                        ) : (
                           <div className="space-y-2">
                             {client.services.map((svc: any, i: number) => (
-                               <div key={i} className="bg-primary/5 rounded-md px-3 py-2 border border-primary/10">
-                                  <p className="font-bold text-sm text-primary">{svc.serviceName}</p>
-                                  <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mt-1">Duration: {svc.duration || 'N/A'}</p>
+                               <div key={i} className={`rounded-md px-3 py-2 border ${svc.status === 'PENDING_ACTIVATION' ? 'bg-amber-50 border-amber-200' : 'bg-primary/5 border-primary/10'}`}>
+                                  <p className={`font-bold text-sm ${svc.status === 'PENDING_ACTIVATION' ? 'text-amber-700' : 'text-primary'}`}>{svc.serviceName}</p>
+                                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mt-1 flex justify-between items-center">
+                                    <span>Duration: {svc.duration || 'N/A'}</span>
+                                    {svc.status === 'PENDING_ACTIVATION' ? (
+                                      <span className="text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded font-black">Verification Pending</span>
+                                    ) : (
+                                      <span className="text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded font-black">Onboarded Successfully</span>
+                                    )}
+                                  </p>
                                </div>
                             ))}
                           </div>

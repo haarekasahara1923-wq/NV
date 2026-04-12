@@ -14,6 +14,7 @@ export default async function ClientDashboardHome() {
 
   const activeSubscriptions = user.subscriptions.filter(s => s.status === 'ACTIVE');
   const pendingSubscriptions = user.subscriptions.filter(s => s.status === 'PENDING_ACTIVATION');
+  const allSubscriptions = [...activeSubscriptions, ...pendingSubscriptions].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const getServiceIcon = (slug: string) => {
     switch (slug) {
@@ -126,33 +127,44 @@ export default async function ClientDashboardHome() {
               </div>
             </div>
             <div className="p-6 flex-1 space-y-4 bg-muted/10">
-              {activeSubscriptions.length > 0 ? (
-                activeSubscriptions.map((sub) => (
+              {allSubscriptions.length > 0 ? (
+                allSubscriptions.map((sub) => {
+                  const isActive = sub.status === 'ACTIVE';
+                  
+                  return (
                   <div key={sub.id} className="relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 rounded-[1.5rem] bg-background border shadow-sm hover:shadow-md hover:border-primary/30 transition-all group">
-                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-success group-hover:w-2 transition-all"></div>
+                    <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${isActive ? 'bg-success' : 'bg-warning'} group-hover:w-2 transition-all`}></div>
                     <div className="flex items-center gap-5 ml-2">
-                      <div className="w-16 h-16 bg-primary/5 text-primary rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300 shadow-inner">
+                      <div className={`w-16 h-16 ${isActive ? 'bg-primary/5 text-primary' : 'bg-muted text-muted-foreground'} rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300 shadow-inner`}>
                         {getServiceIcon(sub.service.slug)}
                       </div>
                       <div>
                         <h3 className="text-xl font-black text-foreground tracking-tight">{sub.service.name}</h3>
                         <div className="flex items-center gap-3 mt-1.5">
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-success/10 text-success text-[10px] font-black uppercase tracking-wider">
-                            <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span> Active
+                          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md ${isActive ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'} text-[10px] font-black uppercase tracking-wider`}>
+                            {isActive ? (
+                              <><span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span> Active</>
+                            ) : (
+                              <><span className="w-1.5 h-1.5 rounded-full bg-warning"></span> Payment Verification Pending</>
+                            )}
                           </span>
                           <span className="text-xs font-bold text-muted-foreground">
-                            Since {sub.startDate ? new Date(sub.startDate).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}
+                            {isActive ? `Since ${sub.startDate ? new Date(sub.startDate).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}` : `Ordered on ${new Date(sub.createdAt).toLocaleDateString()}`}
                           </span>
                         </div>
                       </div>
                     </div>
-                    <Button asChild variant="outline" className="mt-5 sm:mt-0 px-6 h-12 rounded-xl font-bold text-sm border-2 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all group/btn bg-background">
-                      <Link href={getAnalyticsLink(sub.service.slug)}>
-                        View Analytics <TrendingUp className="w-4 h-4 ml-2 text-primary group-hover/btn:text-primary-foreground group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5 transition-all" />
-                      </Link>
-                    </Button>
+                    {isActive ? (
+                      <Button asChild variant="outline" className="mt-5 sm:mt-0 px-6 h-12 rounded-xl font-bold text-sm border-2 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all group/btn bg-background">
+                        <Link href={getAnalyticsLink(sub.service.slug)}>
+                          View Analytics <TrendingUp className="w-4 h-4 ml-2 text-primary group-hover/btn:text-primary-foreground group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5 transition-all" />
+                        </Link>
+                      </Button>
+                    ) : (
+                      <span className="mt-5 sm:mt-0 text-xs font-black text-warning uppercase px-4 py-2 bg-warning/5 rounded-xl border border-warning/20">Awaiting Admin Verification</span>
+                    )}
                   </div>
-                ))
+                )})
               ) : (
                 <div className="h-full py-16 flex flex-col items-center justify-center text-center space-y-6 opacity-80 group-hover/panel:opacity-100 transition-opacity">
                   <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center mb-2">

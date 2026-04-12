@@ -17,7 +17,6 @@ export async function GET() {
           user: {
             include: {
               subscriptions: {
-                where: { status: 'ACTIVE' },
                 include: { service: true }
               }
             }
@@ -33,13 +32,19 @@ export async function GET() {
     let meIncentiveTotal = 0;
     const servicesData = client.user.subscriptions.map(sub => {
        const isFirstMonth = sub.createdAt > new Date(new Date().setMonth(new Date().getMonth() - 1));
-       const incentive = calculateMEIncentive(sub.service.slug, isFirstMonth);
-       meIncentiveTotal += incentive;
+       let incentive = 0;
+       
+       if (sub.status === 'ACTIVE') {
+         incentive = calculateMEIncentive(sub.service.slug, isFirstMonth);
+         meIncentiveTotal += incentive;
+       }
+
        return {
          serviceName: sub.service.name,
          incentive: incentive,
          startDate: sub.startDate || sub.createdAt,
-         duration: sub.planType
+         duration: sub.planType,
+         status: sub.status // PENDING_ACTIVATION or ACTIVE
        };
     });
 
