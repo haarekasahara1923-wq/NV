@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     }
 
     const order = await prisma.order.findUnique({
-      where: { id: orderId }
+      where: { razorpayOrderId: orderId }
     });
 
     if (!order || order.userId !== decoded.userId) {
