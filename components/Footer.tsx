@@ -1,12 +1,14 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function Footer() {
   return (
     <footer className="w-full bg-secondary text-secondary-foreground py-12">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
-          <Image src="/images/scalevo-logo.png" alt="Scalevo" width={160} height={50} className="h-10 w-auto object-contain mb-4" />
+          <div className="flex flex-col mb-4">
+            <span className="text-3xl font-black font-heading tracking-tight text-primary">SCALEVO</span>
+            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-secondary-foreground/60 mt-[-4px]">Digital Growth Agency</span>
+          </div>
           <p className="text-sm text-secondary-foreground/80 mb-4">
             A Unit of Shree Shyam Tech.<br />
             Grow Digital. Grow Real.<br />

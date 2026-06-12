@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Home, Package, Activity, Share2, MapPin, Video, MessageSquare, User as UserIcon, LogOut, LayoutDashboard, Sparkles, Zap, ChevronRight } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -37,7 +36,10 @@ export default function DashboardSidebar() {
       {/* Top Brand Section */}
       <div className="p-8">
         <Link href="/dashboard" className="flex items-center gap-3 group">
-          <Image src="/images/scalevo-logo.png" alt="Scalevo" width={150} height={48} className="h-10 w-auto object-contain" />
+          <div className="flex flex-col">
+            <span className="text-3xl font-black font-heading tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">SCALEVO</span>
+            <span className="text-[10px] uppercase tracking-[0.2em] font-black text-primary mt-[-4px]">Digital Growth Agency</span>
+          </div>
         </Link>
       </div>
 

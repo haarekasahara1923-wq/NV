@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image';
 import { LayoutDashboard, Users, PackageOpen, Briefcase, TrendingUp, Settings, LogOut, Share2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -20,7 +19,10 @@ export default function AdminSidebar() {
   return (
     <div className="w-64 border-r bg-secondary text-secondary-foreground min-h-screen p-4 flex flex-col shadow-xl">
       <div className="mb-8 px-2 border-b border-secondary-foreground/10 pb-4">
-        <Image src="/images/scalevo-logo.png" alt="Scalevo" width={140} height={45} className="h-9 w-auto object-contain invert" />
+        <div className="flex flex-col">
+          <span className="text-2xl font-black font-heading tracking-tight text-primary">SCALEVO</span>
+          <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-secondary-foreground/60 mt-[-4px]">Digital Growth Agency</span>
+        </div>
         <p className="text-[10px] font-bold text-secondary-foreground/60 flex items-center gap-2 mt-2 uppercase tracking-widest">
           <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
           Live Admin
