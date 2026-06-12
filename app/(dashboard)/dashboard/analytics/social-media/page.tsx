@@ -375,7 +375,7 @@ export default function SocialMediaManagementPage() {
                 </div>
                 <p className="text-xl font-bold text-muted-foreground">No content on this date</p>
                 <p className="text-sm text-muted-foreground max-w-xs">
-                  NV Studio hasn&apos;t published any {platformConfig.label} content on {formatDate(selectedDate)}.
+                  Scalevo hasn&apos;t published any {platformConfig.label} content on {formatDate(selectedDate)}.
                   Try selecting a different date.
                 </p>
               </div>

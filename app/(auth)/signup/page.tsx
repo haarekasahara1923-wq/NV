@@ -60,7 +60,7 @@ export default function SignupPage() {
         <div className="bg-white max-w-md w-full rounded-2xl shadow-xl border overflow-hidden">
           <div className="bg-secondary p-6 text-center text-white">
             <h1 className="text-3xl font-bold font-heading text-primary">Create Account</h1>
-            <p className="text-secondary-foreground/70 mt-2 text-sm">Join NV Studio today</p>
+            <p className="text-secondary-foreground/70 mt-2 text-sm">Join Scalevo today</p>
           </div>
           
           <div className="p-6">

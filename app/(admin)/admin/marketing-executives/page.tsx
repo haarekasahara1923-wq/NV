@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 const execs = [
-  { code: 'NV001', name: 'NV Studio Admin', referrals: 15, commission: 0, status: 'ACTIVE' },
+  { code: 'NV001', name: 'Scalevo Admin', referrals: 15, commission: 0, status: 'ACTIVE' },
   { code: 'ME001', name: 'Rahul Sharma', referrals: 8, commission: 15, status: 'ACTIVE' },
   { code: 'ME002', name: 'Priya Me', referrals: 2, commission: 10, status: 'PENDING' },
 ];

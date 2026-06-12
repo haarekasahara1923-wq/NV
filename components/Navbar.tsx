@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
 export default function Navbar() {
@@ -6,7 +7,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold font-heading text-primary">NV Studio</span>
+          <Image src="/images/scalevo-logo.png" alt="Scalevo" width={160} height={50} className="h-10 w-auto object-contain" />
         </Link>
         
         <div className="hidden md:flex flex-1 justify-center space-x-8 text-sm font-medium">

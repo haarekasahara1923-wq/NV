@@ -21,9 +21,9 @@ export default function SupportForm({ clientInfo }: SupportFormProps) {
     e.preventDefault();
     if (!grievance) return;
 
-    const message = `*NV STUDIO - SYSTEMATIC SUPPORT*%0A%0A🪪 *Client ID:* ${clientInfo.userId}%0A👤 *Client Name:* ${clientInfo.name}%0A🛠️ *Grievance:* ${grievance}%0A%0A----------------%0A✅ Sent from NV Studio Dashboard`;
+    const message = `*SCALEVO - SYSTEMATIC SUPPORT*%0A%0A🪪 *Client ID:* ${clientInfo.userId}%0A👤 *Client Name:* ${clientInfo.name}%0A🛠️ *Grievance:* ${grievance}%0A%0A----------------%0A✅ Sent from Scalevo Dashboard`;
     
-    const whatsappUrl = `https://wa.me/919457440300?text=${message}`;
+    const whatsappUrl = `https://wa.me/918962678915?text=${message}`;
     
     const win = window.open(whatsappUrl, '_blank');
     if (!win) {

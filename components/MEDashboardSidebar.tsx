@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Home, Users, DollarSign, User as UserIcon, LogOut, Phone } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -19,7 +20,7 @@ export default function MEDashboardSidebar() {
   return (
     <div className="w-64 border-r bg-card min-h-screen p-4 flex flex-col shadow-[2px_0_10px_rgba(0,0,0,0.02)]">
       <div className="mb-8 px-2">
-        <h2 className="text-2xl font-bold font-heading text-primary">NV Studio</h2>
+        <Image src="/images/scalevo-logo.png" alt="Scalevo" width={140} height={45} className="h-9 w-auto object-contain" />
         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1 opacity-50">ME Portal</p>
       </div>
 

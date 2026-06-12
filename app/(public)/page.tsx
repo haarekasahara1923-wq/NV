@@ -60,7 +60,7 @@ export default function Home() {
                 <div className="relative rounded-[2.5rem] border border-white/10 shadow-2xl overflow-hidden bg-slate-800 transform lg:rotate-y-12 lg:-rotate-x-6 hover:rotate-y-0 hover:rotate-x-0 transition-transform duration-700">
                   <Image 
                     src="/images/social-media/growth-1.jpg" 
-                    alt="NV Studio Dashboard" 
+                    alt="Scalevo Dashboard" 
                     width={800} 
                     height={1000} 
                     className="w-full h-auto object-cover opacity-90 scale-105 hover:scale-100 transition-transform duration-1000"

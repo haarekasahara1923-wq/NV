@@ -53,7 +53,7 @@ export default function ContactPage() {
               <div className="mt-8 rounded-2xl overflow-hidden border border-white/10 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
                 <Image 
                   src="/images/social-media/growth-1.jpg" 
-                  alt="Growth with NV Studio" 
+                  alt="Growth with Scalevo" 
                   width={400} 
                   height={600} 
                   className="w-full h-auto"
@@ -69,7 +69,7 @@ export default function ContactPage() {
               <div>
                 <p className="font-bold text-primary text-sm uppercase tracking-wider">Contact Info</p>
                 <p className="text-lg mt-1 text-slate-200">support@nvstudio.wapiflow.site</p>
-                <p className="text-lg text-slate-200">+91 9457440300</p>
+                <p className="text-lg text-slate-200">+91 8962678915</p>
               </div>
             </div>
           </div>

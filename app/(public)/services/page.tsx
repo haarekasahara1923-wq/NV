@@ -138,7 +138,7 @@ export default function ServicesPage() {
 
             {!showUtrInput ? (
               <div className="text-center space-y-4">
-                <h2 className="text-2xl font-black font-heading text-primary uppercase tracking-wider">Pay to NV Studio</h2>
+                <h2 className="text-2xl font-black font-heading text-primary uppercase tracking-wider">Pay to Scalevo</h2>
                 <p className="text-sm text-muted-foreground">
                   Please scan the QR code below using any UPI App (GPay, PhonePe, Paytm).
                   <br/>
@@ -146,11 +146,11 @@ export default function ServicesPage() {
                 </p>
                 
                 <div className="bg-white p-4 rounded-2xl mx-auto shadow-inner border border-slate-200 inline-block w-64 h-64 relative">
-                  <Image src="/upi-qr.jpg" alt="NV Studio UPI QR" fill className="object-contain rounded-xl" />
+                  <Image src="/upi-qr.jpg" alt="Scalevo UPI QR" fill className="object-contain rounded-xl" />
                 </div>
                 
                 <div className="bg-muted/50 p-3 rounded-lg border">
-                  <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">NV Studio UPI ID</p>
+                  <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Scalevo UPI ID</p>
                   <p className="text-base font-bold text-foreground select-all mt-1">haarekasahara1923-3@oksbi</p>
                 </div>
 
@@ -247,7 +247,7 @@ export default function ServicesPage() {
                 <div className="relative rounded-2xl border border-white/10 overflow-hidden shadow-2xl transform transition-transform group-hover:scale-[1.02] duration-700">
                   <Image 
                     src="/images/social-media/growth-2.jpg" 
-                    alt="NV Studio Client Dashboard" 
+                    alt="Scalevo Client Dashboard" 
                     width={1200} 
                     height={800} 
                     className="w-full object-cover"

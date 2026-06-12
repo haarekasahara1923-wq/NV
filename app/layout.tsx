@@ -8,8 +8,8 @@ const sora = Sora({ subsets: ['latin'], variable: '--font-sora' });
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'NV Studio - Digital Marketing Agency Gwalior',
-  description: 'Grow your business with NV Studio. Professional digital marketing, video production, SMM, Meta Ads, and Chatbot services in Morar, Gwalior.',
+  title: 'Scalevo - Digital Growth Agency',
+  description: 'Grow your business with Scalevo. Professional digital marketing, video production, SMM, Meta Ads, and Chatbot services in Morar, Gwalior.',
 };
 
 export default function RootLayout({

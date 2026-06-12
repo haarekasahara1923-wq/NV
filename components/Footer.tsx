@@ -1,11 +1,12 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
     <footer className="w-full bg-secondary text-secondary-foreground py-12">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
-          <h3 className="text-2xl font-bold font-heading text-primary mb-4">NV Studio</h3>
+          <Image src="/images/scalevo-logo.png" alt="Scalevo" width={160} height={50} className="h-10 w-auto object-contain mb-4" />
           <p className="text-sm text-secondary-foreground/80 mb-4">
             A Unit of Shree Shyam Tech.<br />
             Grow Digital. Grow Real.<br />
@@ -36,13 +37,13 @@ export default function Footer() {
           <h4 className="font-bold mb-4">Contact Us</h4>
           <ul className="space-y-2 text-sm text-secondary-foreground/80">
             <li>Email: support@nvstudio.wapiflow.site</li>
-            <li>Phone: +91 9457440300</li>
+            <li>Phone: +91 8962678915</li>
             <li>Location: Gwalior, Madhya Pradesh</li>
           </ul>
         </div>
       </div>
       <div className="container mx-auto px-4 mt-8 pt-8 border-t border-secondary-foreground/10 text-center text-sm text-secondary-foreground/60">
-        © {new Date().getFullYear()} NV Studio. All rights reserved.
+        © {new Date().getFullYear()} Scalevo Digital Growth Agency. All rights reserved.
       </div>
     </footer>
   );

@@ -7,12 +7,12 @@ export default function AboutPage() {
       <Navbar />
       <div className="bg-background min-h-screen py-20">
         <div className="container mx-auto px-4 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl font-bold font-heading text-foreground mb-8 text-center">About NV Studio</h1>
+          <h1 className="text-4xl md:text-5xl font-bold font-heading text-foreground mb-8 text-center">About Scalevo</h1>
           
           <div className="bg-card p-10 rounded-2xl border shadow-sm">
             <h2 className="text-2xl font-bold text-primary mb-4">A Unit of Shree Shyam Tech</h2>
             <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-              NV Studio is a premier digital marketing agency based in Morar, Gwalior, Madhya Pradesh. We specialize in helping businesses transition and grow online through professional video production, comprehensive social media management, targeted paid advertising, and smart digital automation tools.
+              Scalevo is a premier digital marketing agency based in Morar, Gwalior, Madhya Pradesh. We specialize in helping businesses transition and grow online through professional video production, comprehensive social media management, targeted paid advertising, and smart digital automation tools.
             </p>
             
             <h3 className="text-xl font-bold mt-8 mb-3">Our Mission</h3>

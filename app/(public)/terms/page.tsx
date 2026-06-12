@@ -19,7 +19,7 @@ export default function TermsPage() {
             <p>Subscriptions and purchased service blocks are non-refundable after activation. We commit to the utmost quality, but do not issue refunds for time utilized by our team. You may cancel any subscription with a 15-day notice before the renewal period.</p>
 
             <h2 className="text-2xl font-bold text-foreground mt-8">3. Excluded Charges</h2>
-            <p>NV Studio pricing covers agency fees, management, and strategy. Meta ad spend, Google network spend, and specific third-party platform charges (e.g. Chatbot server scaling) are strictly excluded and are to be borne by the client directly via their connected accounts.</p>
+            <p>Scalevo pricing covers agency fees, management, and strategy. Meta ad spend, Google network spend, and specific third-party platform charges (e.g. Chatbot server scaling) are strictly excluded and are to be borne by the client directly via their connected accounts.</p>
 
             <h2 className="text-2xl font-bold text-foreground mt-8">4. ME Commissions</h2>
             <p>Marketing Executive (ME) commissions are calculated based on realized base-fee revenue and are paid out to verified ME bank accounts within 30 days of the client's payment clearance. All commission calculations processed and noted by Admin are final.</p>

@@ -16,15 +16,15 @@ export const WelcomeClientEmail = ({
 }: WelcomeClientEmailProps) => (
   <Html>
     <Head />
-    <Preview>Welcome to NV Studio! Let's grow your business together.</Preview>
+    <Preview>Welcome to Scalevo! Let's grow your business together.</Preview>
     <Body style={main}>
       <Container style={container}>
         <Section style={header}>
-          <Heading style={h1}>Welcome to NV Studio, {clientName}! 🎉</Heading>
+          <Heading style={h1}>Welcome to Scalevo, {clientName}! 🎉</Heading>
         </Section>
         <Section style={bodySection}>
           <Text style={text}>
-            We're thrilled to have you on board. NV Studio is dedicated to accelerating your digital growth with premium services ranging from Social Media Management to complete Video Production.
+            We're thrilled to have you on board. Scalevo is dedicated to accelerating your digital growth with premium services ranging from Social Media Management to complete Video Production.
           </Text>
           <Text style={text}>
             You were registered under the agency code: <strong>{meCode}</strong>
@@ -42,7 +42,7 @@ export const WelcomeClientEmail = ({
         </Section>
         <Section style={footer}>
           <Text style={footerDisclaimer}>
-            © {new Date().getFullYear()} NV Studio. A Unit of Shree Shyam Tech.<br />
+            © {new Date().getFullYear()} Scalevo Digital Growth Agency.<br />
             Morar, Gwalior, Madhya Pradesh - 474006
           </Text>
         </Section>

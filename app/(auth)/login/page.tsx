@@ -41,7 +41,7 @@ export default function LoginPage() {
         <div className="bg-white max-w-[400px] w-full rounded-2xl shadow-xl border overflow-hidden">
           <div className="bg-secondary p-8 text-center text-white">
             <h1 className="text-3xl font-bold font-heading text-primary">Welcome Back</h1>
-            <p className="text-secondary-foreground/70 mt-2">Log in to your NV Studio portal</p>
+            <p className="text-secondary-foreground/70 mt-2">Log in to your Scalevo portal</p>
           </div>
           
           <div className="p-8">

@@ -40,7 +40,7 @@ export default async function SupportPage() {
                 </p>
                 <div className="p-4 bg-white rounded-xl shadow-sm border border-success/10 text-center">
                     <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mb-1">Direct Helpline</p>
-                    <p className="text-xl font-black text-foreground font-heading tracking-tighter cursor-copy">+91 9457440300</p>
+                    <p className="text-xl font-black text-foreground font-heading tracking-tighter cursor-copy">+91 8962678915</p>
                 </div>
             </div>
 

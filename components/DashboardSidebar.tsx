@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Home, Package, Activity, Share2, MapPin, Video, MessageSquare, User as UserIcon, LogOut, LayoutDashboard, Sparkles, Zap, ChevronRight } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -36,13 +37,7 @@ export default function DashboardSidebar() {
       {/* Top Brand Section */}
       <div className="p-8">
         <Link href="/dashboard" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
-            <Sparkles className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h2 className="text-2xl font-black font-heading tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">NV Studio</h2>
-            <p className="text-[10px] text-primary uppercase tracking-[0.2em] font-black">Client Portal</p>
-          </div>
+          <Image src="/images/scalevo-logo.png" alt="Scalevo" width={150} height={48} className="h-10 w-auto object-contain" />
         </Link>
       </div>
 

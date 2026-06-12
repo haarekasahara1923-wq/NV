@@ -59,8 +59,8 @@ export default async function MyServicesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {myServices.map((sub, i) => {
-                const waMessage = `*NV Studio Support Request*%0A%0A*Service:* ${sub.service.name}%0A*Client Name:* ${user.name}%0A*ID:* ${user.id.slice(-6).toUpperCase()}`;
-                const waUrl = `https://wa.me/919457440300?text=${waMessage}`;
+                const waMessage = `*Scalevo Support Request*%0A%0A*Service:* ${sub.service.name}%0A*Client Name:* ${user.name}%0A*ID:* ${user.id.slice(-6).toUpperCase()}`;
+                const waUrl = `https://wa.me/918962678915?text=${waMessage}`;
 
                 return (
                     <div key={i} className="bg-card rounded-2xl border p-8 hover:shadow-xl transition-all group relative overflow-hidden">

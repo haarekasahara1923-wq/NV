@@ -15,9 +15,9 @@ export default function FloatingWhatsApp() {
     const phone = e.target.phone.value;
     const message = e.target.message.value;
 
-    const text = `Hi NV Studio! I'm interested in your services.%0A%0A*Name:* ${name}%0A*Email:* ${email}%0A*Phone:* ${phone}%0A*Message:* ${message}`;
+    const text = `Hi Scalevo! I'm interested in your services.%0A%0A*Name:* ${name}%0A*Email:* ${email}%0A*Phone:* ${phone}%0A*Message:* ${message}`;
     
-    window.open(`https://wa.me/919457440300?text=${text}`, '_blank');
+    window.open(`https://wa.me/918962678915?text=${text}`, '_blank');
     setIsOpen(false);
   };
 
